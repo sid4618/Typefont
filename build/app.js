@@ -152,8 +152,8 @@ const ImageComparison = (
                         return;
                     
                     if (scaleToSameSize) {
-                        firstResult.resize(64, Jimp.AUTO);
-                        secondResult.resize(64, Jimp.AUTO);
+                        firstResult.resize(64, 64);
+                        secondResult.resize(64, 64);
                     }
                     
                     firstResult.greyscale();
@@ -205,17 +205,22 @@ const ImageDrawing = class {
      * draw Load a image inside the canvas (overriding the current frame).
      * @param {String} url The URL of the image to draw.
      * @param {Number} [scale = 1] Scale factor.
+     * @param {Number} [newWidth] New width.
+     * @param {Number} [newHeight] New height.
      * @return {Promise}
     */
     
-    draw (url, scale = 1)
+    draw (url, scale = 1, newWidth, newHeight)
     {
         return new Promise((resolve, reject) => {
             const image = document.createElement("img");
             
             image.onload = () => {
-                let width = image.width * scale;
-                let height = image.height * scale;
+                let width = newWidth || image.width;
+                let height = newHeight || image.height;
+                
+                width *= scale;
+                height *= scale;
                 
                 this.canvas.width = width;
                 this.canvas.height = height;
