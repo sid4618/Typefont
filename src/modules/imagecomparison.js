@@ -29,8 +29,8 @@ const ImageComparison = (
                         return;
                     
                     if (scaleToSameSize) {
-                        firstResult.resize(64, Jimp.AUTO);
-                        secondResult.resize(64, Jimp.AUTO);
+                        firstResult.resize(64, 64);
+                        secondResult.resize(64, 64);
                     }
                     
                     firstResult.greyscale();
