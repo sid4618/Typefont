@@ -156,8 +156,8 @@ const ImageComparison = (
                         secondResult.resize(64, 64);
                     }
                     
-                    firstResult.greyscale();
-                    secondResult.greyscale();
+                    // firstResult.greyscale();
+                    // secondResult.greyscale();
                     
                     result.analytical = 100 - (Jimp.diff(firstResult, secondResult, threshold).percent * 100);
                     result.perceptual = 100 - (Jimp.distance(firstResult, secondResult) * 100);
@@ -366,15 +366,19 @@ const OpticalRecognition = (
         /**
          * _recognize Recognize the text in a image.
          * @param {String} url The URL of the image to recognize.
+         * @param {Object} [options = {}]
          * @return {Promise}
         */
         
-        const _recognize = (url) => {
+        const _recognize = (url, options = {}) => {
+            for (const option in options)
+                _OPTIONS[option] = options[option];
+            
             return Tesseract.recognize(url, _OPTIONS);
     	};
         
         // Return the public context.
-        return (url) => _recognize(url);
+        return (url, options) => _recognize(url, options);
     }
 
 ());
@@ -387,13 +391,14 @@ const OpticalRecognition = (
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modules_fontstorage__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__modules_imagedrawing__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__modules_opticalrecognition__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modules_imagecomparison__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_font_fontstorage__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_image_imagedrawing__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_image_opticalrecognition__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_image_imagecomparison__ = __webpack_require__(1);
 /**
  * @module Typefont Used to recognize the font of a text in a image.
  * @author Vasile Pește <sirvasile@protonmail.ch>
+ * @version 0.1.0
 */
 
 
@@ -407,7 +412,7 @@ const Typefont = (
     {
         "use strict";
         
-        // Used as recognition global options.
+        // Used as global options.
         const _OPTIONS = {
             // The minimum confidence that a symbol must have to be accepted in the comparison queue.
             minSymbolConfidence: 30,
@@ -429,11 +434,11 @@ const Typefont = (
             const symbols = res.symbols;
             
             // This will skip double letters! Note the confidence condition.
-            for (let symbol of symbols)
+            for (const symbol of symbols)
                 if (symbol.confidence > _OPTIONS.minSymbolConfidence)
                     data[symbol.text] = img.crop(symbol.bbox.x0, symbol.bbox.y0, symbol.bbox.x1, symbol.bbox.y1).substr(22);
             
-            // Note that all "data:image/png;base64," are trimmed with substr(22)!
+            // Note that "data:image/png;base64," is trimmed with substr(22)!
             return data;
         };
         
@@ -454,33 +459,6 @@ const Typefont = (
         };
         
         /**
-         * _base64ToDrawing Transform a list of base64 data image/png symbols into ImageDrawing instances (and load them).
-         * @param {Object} symbolsBase64
-         * @return {Promise}
-        */
-        
-        const _base64ToDrawing = (symbolsBase64) => {
-            return new Promise((resolve, reject) => {
-                const todo = Object.keys(symbolsBase64).length;
-                const finalize = () => {
-                    ++done;
-                    
-                    if (done == todo)
-                        resolve(symbolsBase64);
-                };
-                let done = 0;
-                
-                for (let key in symbolsBase64)
-                {
-                    const data = symbolsBase64[key];
-                    
-                    symbolsBase64[key] = new __WEBPACK_IMPORTED_MODULE_1__modules_imagedrawing__["a" /* default */]();
-                    symbolsBase64[key].draw(data).then(finalize).catch(reject);
-                } 
-            });
-        };
-        
-        /**
          * _prepareImageRecognition Load and recognize the symbols and text in a image.
          * @param {String} url The URL of the image to recognize.
          * @return {Promise}
@@ -488,7 +466,7 @@ const Typefont = (
         
         const _prepareImageRecognition = (url) => {
             return new Promise((resolve, reject) => {
-                const image = new __WEBPACK_IMPORTED_MODULE_1__modules_imagedrawing__["a" /* default */]();
+                const image = new __WEBPACK_IMPORTED_MODULE_1__lib_image_imagedrawing__["a" /* default */]();
                 
                 image.draw(url).then(() => {
                     const brightness = image.brightness();
@@ -497,7 +475,7 @@ const Typefont = (
                     if (brightness > 25 && brightness < 125)
                         image.binarize(brightness);
                     
-                    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__modules_opticalrecognition__["a" /* default */])(image.toDataURL()).then((res) => {
+                    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__lib_image_opticalrecognition__["a" /* default */])(image.toDataURL()).then((res) => {
                         res.symbolsBase64 = _symbolsToBase64(image, res);
                         res.pivot = image;
                         resolve(res);
@@ -523,11 +501,11 @@ const Typefont = (
         
         const _prepareFontsIndex = (url = "storage/index.json") => {
             return new Promise((resolve, reject) => {
-                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__modules_fontstorage__["a" /* default */])(url).then((res) => {
+                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__lib_font_fontstorage__["a" /* default */])(url).then((res) => {
                     if (res.content)
                         resolve(res.content);
                     else
-                        reject();
+                        reject("Unable to open the fonts index.");
                 }).catch(reject);
             });
         };
@@ -540,6 +518,7 @@ const Typefont = (
          *         "name": "...,
          *         "author": "...",
          *         "uri": "...",
+         *         "key": "value",
          *         ...
          *     },
          *     "alpha": {
@@ -549,6 +528,7 @@ const Typefont = (
          *         ...
          *     }
          * }
+         * All meta keys and values will be included in the final result.
          * @param {String} name The name of the font.
          * @param {String} [url = "storage/fonts/"] The url of the directory containing the fonts.
          * @param {String} [data = "data.json"] The name of the JSON file containing the font data.
@@ -557,11 +537,11 @@ const Typefont = (
         
         const _prepareFont = (name, url = "storage/fonts/", data = "data.json") => {
             return new Promise((resolve, reject) => {
-                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__modules_fontstorage__["a" /* default */])(`${url}${name}/${data}`).then((res) => {
+                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__lib_font_fontstorage__["a" /* default */])(`${url}${name}/${data}`).then((res) => {
                     if (res.content)
                         resolve(res.content);
                     else
-                        reject();
+                        reject(`Unable to open the ${name} font.`);
                 }).catch(reject);
             });
         };
@@ -614,11 +594,11 @@ const Typefont = (
                     if (done == todo)
                         resolve(result);
                 };
-                const buff = __WEBPACK_IMPORTED_MODULE_1__modules_imagedrawing__["a" /* default */].base64ToBuffer;
+                const buff = __WEBPACK_IMPORTED_MODULE_1__lib_image_imagedrawing__["a" /* default */].base64ToBuffer;
                 let done = 0;
                 
-                for (let symbol in first)
-                    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__modules_imagecomparison__["a" /* default */])(buff(first[symbol]), buff(second[symbol]), _OPTIONS.analyticComparisonThreshold, _OPTIONS.sameSizeComparison)
+                for (const symbol in first)
+                    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__lib_image_imagecomparison__["a" /* default */])(buff(first[symbol]), buff(second[symbol]), _OPTIONS.analyticComparisonThreshold, _OPTIONS.sameSizeComparison)
                         .then((res) => finalize(symbol, res))
                         .catch(reject);
             });
@@ -634,8 +614,7 @@ const Typefont = (
             let calc = 0;
             let ll = 0;
             
-            for (let symbol in res)
-            {
+            for (const symbol in res) {
                 ++ll;
                 calc += (res[symbol].perceptual + res[symbol].analytical) / 2;
             }
@@ -653,11 +632,7 @@ const Typefont = (
             return new Promise((resolve, reject) => {
                 _prepare(url).then((res) => {
                     resolve({
-                        meta: {
-                            name: "",
-                            author: "",
-                            uri: ""
-                        },
+                        meta: {},
                         alpha: res.recognition.symbolsBase64
                     });
                 }).catch(reject);
@@ -667,35 +642,36 @@ const Typefont = (
         /**
          * _recognize Start the process to recognize the font of a text in a image.
          * @param {String} url The URL of the image.
-         * @param {Function} progress A function to call when there is a progress (called every time the input text is compared with a font in the database).
+         * @param {Object} [options = {}]
          * @return {Promise}
         */
         
-        const _recognize = (url, progress) => {
+        const _recognize = (url, options = {}) => {
+            for (const option in options)
+                _OPTIONS[option] = options[option];
+            
             return new Promise((resolve, reject) => {
                 _prepare(url).then((res) => {
                     const fonts = res.fonts.index;
                     const todo = fonts.length;
                     const result = {};
+                    const progress = _OPTIONS.progress;
                     const recognition = res.recognition.symbolsBase64;
                     const finalize = (name, val, font) => {
                         ++done;
                         
-                        result[name] = {
-                            author: font.meta.author,
-                            uri: font.meta.uri,
-                            similarity: _average(val)  
-                        };
+                        result[name] = font.meta || {};
+                        result[name].similarity = _average(val);
                         
                         if (progress)
-                            progress(name, val, done, todo);
+                            progress(name, val, done / todo);
                         
                         if (done == todo)
                             resolve(result);
                     };
                     let done = 0;
                     
-                    for (let name of fonts)
+                    for (const name of fonts)
                         _prepareFont(name).then((font) => {
                             _symbolsToDomain(recognition, font.alpha);
                             _compare(recognition, font.alpha).then((fin) => finalize(name, fin, font)).catch(reject);
@@ -705,7 +681,7 @@ const Typefont = (
         };
         
         // Return the public context.
-        return (url, progress) => _recognize(url, progress);
+        return (url, options) => _recognize(url, options);
     }
 
 ());
