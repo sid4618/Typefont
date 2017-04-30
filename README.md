@@ -27,7 +27,7 @@ Text on the cover of another book.
 Screenshot of a text on a video from the web.
 ![](http://i.imgur.com/8ZEclQE.png)
 
-Each font result has a similarity percentage with the input image and a piece of information about the font.
+Each font in the result has a percentage of similarity with the input image and a piece of information about the font.
 
 ## Why
 I had just discovered the version of [Tesseract](http://tesseract.projectnaptha.com/) written in JavaScript and I noticed that he was also trying to identify the font, I wondered how to improve this process then I used Tesseract to
