@@ -33,8 +33,8 @@ const ImageComparison = (
                         secondResult.resize(64, 64);
                     }
                     
-                    firstResult.greyscale();
-                    secondResult.greyscale();
+                    // firstResult.greyscale();
+                    // secondResult.greyscale();
                     
                     result.analytical = 100 - (Jimp.diff(firstResult, secondResult, threshold).percent * 100);
                     result.perceptual = 100 - (Jimp.distance(firstResult, secondResult) * 100);

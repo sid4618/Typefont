@@ -12,7 +12,7 @@ const ShapePerception = (
         "use strict";
         
         // Used as dimension for resizing the images.
-        const _PRECISION = 48;
+        const _PRECISION = 64;
         
         /**
          * _prepareImages Load and binarize two images as ImageDrawing instances.
