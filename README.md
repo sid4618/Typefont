@@ -44,13 +44,15 @@ If you want to add a new font you must follow this structure.
         "name": "name",
         "author": "author",
         "uri": "uri",
-        "license: "license",
-        "key": "value"
+        "license": "license",
+        "key": "value",
+        ...
     },
     "alpha": {
         "a": "base64",
         "b": "base64",
-        "c": "base64"
+        "c": "base64",
+        ...
     }
 }
 ```
