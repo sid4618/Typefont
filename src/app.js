@@ -1,7 +1,7 @@
 /**
  * @module Typefont Used to recognize the font of a text in a image.
  * @author Vasile Pește <sirvasile@protonmail.ch>
- * @version 0.1.0
+ * @version 0.1-alpha.0
 */
 
 import FontStorage from "./lib/font/fontstorage";
