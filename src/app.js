@@ -18,11 +18,23 @@ const Typefont = (
         // Used as global options.
         const _OPTIONS = {
             // The minimum confidence that a symbol must have to be accepted in the comparison queue.
+            // The confidence value is assigned by the OCR engine.
             minSymbolConfidence: 30,
+            
             // Used as pixel based image comparison threshold.
             analyticComparisonThreshold: 0.52161,
+            
             // Scale the images to the same size before comparison?
-            sameSizeComparison: true
+            sameSizeComparison: true,
+            
+            // The URL of the directory containing the fonts.
+            fontsDirectory: "storage/fonts/",
+            
+            // The name of the file containing the JSON data of a font.
+            fontsData: "data.json",
+            
+            // The URL of the fonts index JSON file.
+            fontsIndex: "storage/index.json"
         };
         
         /**
@@ -98,11 +110,11 @@ const Typefont = (
          *         ...
          *     ]
          * }
-         * @param {String} [url = "storage/index.json"] The url of the fonts index JSON file.
+         * @param {String} [url = _OPTIONS.fontsIndex] The URL of the fonts index JSON file.
          * @return {Promise}
         */
         
-        const _prepareFontsIndex = (url = "storage/index.json") => {
+        const _prepareFontsIndex = (url = _OPTIONS.fontsIndex) => {
             return new Promise((resolve, reject) => {
                 FontStorage(url).then((res) => {
                     if (res.content)
@@ -133,12 +145,12 @@ const Typefont = (
          * }
          * All meta keys and values will be included in the final result.
          * @param {String} name The name of the font.
-         * @param {String} [url = "storage/fonts/"] The url of the directory containing the fonts.
-         * @param {String} [data = "data.json"] The name of the JSON file containing the font data.
+         * @param {String} [url = _OPTIONS.fontsDirectory] The URL of the directory containing the fonts.
+         * @param {String} [data = _OPTIONS.fontsData] The name of the JSON file containing the font data.
          * @return {Promise}
         */
         
-        const _prepareFont = (name, url = "storage/fonts/", data = "data.json") => {
+        const _prepareFont = (name, url = _OPTIONS.fontsDirectory, data = _OPTIONS.fontsData) => {
             return new Promise((resolve, reject) => {
                 FontStorage(`${url}${name}/${data}`).then((res) => {
                     if (res.content)
@@ -278,7 +290,7 @@ const Typefont = (
                         _prepareFont(name).then((font) => {
                             _symbolsToDomain(recognition, font.alpha);
                             _compare(recognition, font.alpha).then((fin) => finalize(name, fin, font)).catch(reject);
-                        });
+                        }).catch(reject);
                 }).catch(reject); 
             });
         };
