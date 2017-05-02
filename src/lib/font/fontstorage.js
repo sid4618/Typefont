@@ -25,12 +25,18 @@ const FontStorage = (
                 xhr.onload = (e) => {
                     result.exists = e.target.status != 404;
                     
-                    if (result.exists)
-                        result.content = JSON.parse(e.target.responseText);
+                    if (result.exists) {
+                        try {
+                            result.content = JSON.parse(e.target.responseText);
+                        }
+                        catch (e) {
+                            reject(`Unable to parse ${url}.`);
+                        }
+                    }
                     
                     resolve(result);
                 };
-                xhr.onerror = xhr.onabort = reject;
+                xhr.onerror = xhr.onabort = () => reject(`Unable to open ${url}.`);
                 xhr.send();
             });
         };
