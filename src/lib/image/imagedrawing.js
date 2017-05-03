@@ -127,6 +127,22 @@ const ImageDrawing = class {
     }
     
     /**
+     * width Get the width of the canvas.
+    */
+    
+    get width () {
+        return this.canvas.width;
+    }
+    
+    /**
+     * height Get the height of the canvas.
+    */
+    
+    get height () {
+        return this.canvas.height;
+    }
+    
+    /**
      * base64ToBuffer Serialize a base64 string to ArrayBuffer.
      * @param {String} base64 The base64 string.
      * @return {ArrayBuffer}
