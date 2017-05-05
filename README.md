@@ -1,21 +1,16 @@
 # Typefont
-Here I’m working on this algorithm that tries to recognize the font of a text in a photo. My goal is to obtain accurate results with the image as only input avoiding other manual processes.
+This project tries to recognize the font of a text in a photo using a set of algorithms and libraries. The goal is to obtain accurate results with the image as only input avoiding other manual processes.
+This is the only open source project of its kind.
 
 ## Usage
-Import the compiled module then call the main function like in the following script.
-The first argument can be: a string with the path of the image, a string with the base64 data of the image, the instance of a canvas or the instance of a image.
+-- For now it works only in browser environment.
+Import the compiled module then call the main function like in the following script
 ```javascript
-import Typefont from "app";
+import Typefont from "src/app";
 
-Typefont("path/image.png")
-    .then((res) => console.log(res))
-    .catch((err) => console.log(err));
+Typefont("path/image.png").then((res) => console.log(res));
 ```
-
-You can build the project by using webpack.
-```shell
-webpack src/app.js build/app.js
-```
+the first argument can be: a string with the **path** of the image, a string with the **base64** data of the image, the instance of a **canvas** or the instance of a **image**. The function returns a Promise.
 
 ## Preview
 Text on the cover of a book (texts are in italian because I live in Italy).
@@ -31,13 +26,12 @@ Each font in the result has a percentage of similarity with the input image and 
 
 ## Why
 I had just discovered the version of [Tesseract](http://tesseract.projectnaptha.com/) written in JavaScript and I noticed that he was also trying to identify the font, I wondered how to improve this process then I used Tesseract to
-extract the letters from the input image, I created a new system that uses the [Jimp](https://github.com/oliver-moran/jimp) image processing library to compare the extracted letters with the fonts stored in a dedicated library.
+extract the letters from the input image, I created a new system that uses the [Jimp](https://github.com/oliver-moran/jimp) image processing library to compare the extracted letters with the fonts stored in a dedicated library. I'm writing a dedicated algorithm for comparison in order to obtain more accurate results.
 
 ## How it works?
-The input image is passed to the optical character recognition after some filters based on its brightness. Then the symbols (letters) are extracted from the input image and compared with the symbols of the fonts in the database using a perceptual (Hamming distance) comparison and a pixel based comparison in order to obtain a percentage of similarity.
+The input image is passed to the optical character recognition after some filters based on its brightness. Then the symbols (letters) are extracted from the input image and compared with the symbols of the fonts in the database using a perceptual comparison and a pixel based comparison in order to obtain a percentage of similarity.
 
-The symbols of fonts are just a JSON structure with letters as keys and the base64 of the image of the letter as value.
-If you want to add a new font you must follow this structure.
+The symbols of fonts are just a JSON structure with letters as keys and the base64 of the image of the letter as value. If you want to add a new font you must follow this structure.
 ```javascript
 {
     "meta": {
@@ -57,6 +51,18 @@ If you want to add a new font you must follow this structure.
 }
 ```
 Each key of the meta object is included in the final result.
+
+## Options
+You can pass an object with options as second argument.
+Option | Value | Description
+--- | --- | ---
+`progress` | `undefined` | A function which is called every time the comparison with a font is completed.
+`minSymbolConfidence` | `30` | The minimum confidence that a symbol must have to be accepted in the comparison queue (the confidence value is assigned by the OCR engine).
+`analyticComparisonThreshold` | `0.52161` | The threshold for the pixel based image comparison.
+`sameSizeComparison` | `true` | Scale the symbols to the same size before comparison?
+`fontsDirectory` | `storage/fonts/` | The URL of the directory containing the fonts.
+`fontsData` | `data.json` | The name of the file containing the JSON data of a font.
+`fontsIndex` | `storage/index.json` | The URL of the fonts index JSON file.
 
 ## License
 MIT License.
