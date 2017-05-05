@@ -29,6 +29,19 @@ Each font in the result has a percentage of similarity with the input image and 
 I had just discovered the version of [Tesseract](http://tesseract.projectnaptha.com/) written in JavaScript and I noticed that he was also trying to identify the font, I wondered how to improve this process then I used Tesseract to
 extract the letters from the input image, I created a new system that uses the [Jimp](https://github.com/oliver-moran/jimp) image processing library to compare the extracted letters with the fonts stored in a dedicated library. I'm writing a dedicated algorithm for comparison in order to obtain more accurate results.
 
+## Options
+You can pass an object with options as second argument.
+
+Option | Type | Description | Default
+--- | --- | --- | ---
+`progress` | `Function` | A function which is called every time the comparison with a font is completed. | `undefined`
+`minSymbolConfidence` | `Number` | The minimum confidence that a symbol must have to be accepted in the comparison queue (the confidence value is assigned by the OCR engine). | `30`
+`analyticComparisonThreshold` | `Number` | The threshold for the pixel based image comparison. | `0.52161`
+`sameSizeComparison` | `Boolean` | Scale the symbols to the same size before comparison? | `true`
+`fontsDirectory` | `String` | The URL of the directory containing the fonts. | `storage/fonts/`
+`fontsData` | `String` | The name of the file containing the JSON data of a font. | `data.json`
+`fontsIndex` | `String` | The URL of the fonts index JSON file. | `storage/index.json`
+
 ## How it works?
 The input image is passed to the optical character recognition after some filters based on its brightness. Then the symbols (letters) are extracted from the input image and compared with the symbols of the fonts in the database using a perceptual comparison and a pixel based comparison in order to obtain a percentage of similarity.
 
@@ -52,19 +65,6 @@ The symbols of fonts are just a JSON structure with letters as keys and the base
 }
 ```
 Each key of the meta object is included in the final result.
-
-## Options
-You can pass an object with options as second argument.
-
-Option | Type | Description | Default
---- | --- | --- | ---
-`progress` | `Function` | A function which is called every time the comparison with a font is completed. | `undefined`
-`minSymbolConfidence` | `Number` | The minimum confidence that a symbol must have to be accepted in the comparison queue (the confidence value is assigned by the OCR engine). | `30`
-`analyticComparisonThreshold` | `Number` | The threshold for the pixel based image comparison. | `0.52161`
-`sameSizeComparison` | `Boolean` | Scale the symbols to the same size before comparison? | `true`
-`fontsDirectory` | `String` | The URL of the directory containing the fonts. | `storage/fonts/`
-`fontsData` | `String` | The name of the file containing the JSON data of a font. | `data.json`
-`fontsIndex` | `String` | The URL of the fonts index JSON file. | `storage/index.json`
 
 ## License
 MIT License.
