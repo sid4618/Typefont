@@ -58,13 +58,13 @@ You can pass an object with options as second argument.
 
 Option | Value | Description
 --- | --- | ---
-`progress` | `undefined` | A function which is called every time the comparison with a font is completed.
-`minSymbolConfidence` | `30` | The minimum confidence that a symbol must have to be accepted in the comparison queue (the confidence value is assigned by the OCR engine).
-`analyticComparisonThreshold` | `0.52161` | The threshold for the pixel based image comparison.
-`sameSizeComparison` | `true` | Scale the symbols to the same size before comparison?
-`fontsDirectory` | `storage/fonts/` | The URL of the directory containing the fonts.
-`fontsData` | `data.json` | The name of the file containing the JSON data of a font.
-`fontsIndex` | `storage/index.json` | The URL of the fonts index JSON file.
+`progress` | `Function` | A function which is called every time the comparison with a font is completed.
+`minSymbolConfidence` | `Number` | The minimum confidence that a symbol must have to be accepted in the comparison queue (the confidence value is assigned by the OCR engine), default value is `30`.
+`analyticComparisonThreshold` | `Number` | The threshold for the pixel based image comparison, default value is `0.52161`.
+`sameSizeComparison` | `Boolean` | Scale the symbols to the same size before comparison? Default value is `true`.
+`fontsDirectory` | `String` | The URL of the directory containing the fonts, default value is `storage/fonts/`.
+`fontsData` | `String` | The name of the file containing the JSON data of a font, default value is `data.json`.
+`fontsIndex` | `String` | The URL of the fonts index JSON file, default value is `storage/index.json`.
 
 ## License
 MIT License.
