@@ -58,7 +58,7 @@ You can pass an object with options as second argument.
 
 Option | Type | Description | Default
 --- | --- | --- | ---
-`progress` | `Function` | A function which is called every time the comparison with a font is completed | `undefined`
+`progress` | `Function` | A function which is called every time the comparison with a font is completed. | `undefined`
 `minSymbolConfidence` | `Number` | The minimum confidence that a symbol must have to be accepted in the comparison queue (the confidence value is assigned by the OCR engine). | `30`
 `analyticComparisonThreshold` | `Number` | The threshold for the pixel based image comparison. | `0.52161`
 `sameSizeComparison` | `Boolean` | Scale the symbols to the same size before comparison? | `true`
