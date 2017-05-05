@@ -3,7 +3,8 @@ This project tries to recognize the font of a text in a photo using a set of alg
 This is the only open source project of its kind.
 
 ## Usage
--- For now it works only in browser environment.
+For now it works only in browser environment.
+
 Import the compiled module then call the main function like in the following script
 ```javascript
 import Typefont from "src/app";
@@ -54,6 +55,7 @@ Each key of the meta object is included in the final result.
 
 ## Options
 You can pass an object with options as second argument.
+
 Option | Value | Description
 --- | --- | ---
 `progress` | `undefined` | A function which is called every time the comparison with a font is completed.
