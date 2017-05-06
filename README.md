@@ -12,7 +12,7 @@ import {Typefont} from "src/index";
 Typefont("path/image.png").then((res) => console.log(res));
 ```
 the first argument can be: a string with the **path** of the image, a string with the **base64** data of the image, the instance of a **canvas** or the instance of a **image**. The function returns a Promise.
-You can compile the whole project using Webpack or other tools. You can also use Babel to get the ES5 cpde.
+You can compile the whole project using Webpack or other tools.
 
 ## Preview
 Text on the cover of a book (texts are in italian because I live in Italy).
