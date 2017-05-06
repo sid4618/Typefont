@@ -7,7 +7,7 @@ For now it works only in browser environment.
 
 Import the compiled module then call the main function like in the following script
 ```javascript
-import Typefont from "src/app";
+import {Typefont} from "src/app";
 
 Typefont("path/image.png").then((res) => console.log(res));
 ```
