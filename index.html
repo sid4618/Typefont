@@ -5,13 +5,12 @@
         <meta name="viewport" content="width=device-width">
         <script type="text/javascript" src="https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js"></script>
         <script type="text/javascript" src="https://cdn.rawgit.com/oliver-moran/jimp/v0.2.27/browser/lib/jimp.min.js"></script>
-        <script type="text/javascript" src="build/app.js"></script>
         <title>APP</title>
     </head>
     <body></body>
-    <script type="text/javascript">
-        Typefont("test/web.png")
-            .then((res) => console.log(res))
-            .catch((err) => console.log(err));
+    <script type="module">
+        import {Typefont} from "./src/index";
+        
+        Typefont("test/web.png").then((res) => console.log(res)).catch((err) => console.log(err));
     </script>
 </html>
