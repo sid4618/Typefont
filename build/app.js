@@ -102,7 +102,7 @@ const FontStorage = (
                         try {
                             result.content = JSON.parse(e.target.responseText);
                         }
-                        catch (e) {
+                        catch (ex) {
                             reject(`Unable to parse ${url}.`);
                         }
                     }
@@ -119,8 +119,8 @@ const FontStorage = (
     }
 
 ());
+/* harmony export (immutable) */ __webpack_exports__["a"] = FontStorage;
 
-/* harmony default export */ __webpack_exports__["a"] = (FontStorage);
 
 /***/ }),
 /* 1 */
@@ -188,8 +188,8 @@ const ImageComparison = (
     }
 
 ());
+/* harmony export (immutable) */ __webpack_exports__["a"] = ImageComparison;
 
-/* harmony default export */ __webpack_exports__["a"] = (ImageComparison);
 
 /***/ }),
 /* 2 */
@@ -211,12 +211,12 @@ const ImageDrawing = class {
      * draw Load a image inside the canvas (overriding the current frame).
      * @param {String} url The URL of the image to draw.
      * @param {Number} [scale = 1] Scale factor.
-     * @param {Number} [newWidth] New width.
-     * @param {Number} [newHeight] New height.
+     * @param {Number} [newWidth = undefined] New width.
+     * @param {Number} [newHeight = undefined] New height.
      * @return {Promise}
     */
     
-    draw (url, scale = 1, newWidth, newHeight)
+    draw (url, scale = 1, newWidth = undefined, newHeight = undefined)
     {
         return new Promise((resolve, reject) => {
             const image = document.createElement("img");
@@ -359,8 +359,8 @@ const ImageDrawing = class {
         return buffer;
     }
 };
+/* harmony export (immutable) */ __webpack_exports__["a"] = ImageDrawing;
 
-/* harmony default export */ __webpack_exports__["a"] = (ImageDrawing);
 
 /***/ }),
 /* 3 */
@@ -404,8 +404,8 @@ const OpticalRecognition = (
     }
 
 ());
+/* harmony export (immutable) */ __webpack_exports__["a"] = OpticalRecognition;
 
-/* harmony default export */ __webpack_exports__["a"] = (OpticalRecognition);
 
 /***/ }),
 /* 4 */
@@ -500,7 +500,7 @@ const Typefont = (
         
         const _prepareImageRecognition = (url) => {
             return new Promise((resolve, reject) => {
-                const image = new __WEBPACK_IMPORTED_MODULE_1__lib_image_imagedrawing__["a" /* default */]();
+                const image = new __WEBPACK_IMPORTED_MODULE_1__lib_image_imagedrawing__["a" /* ImageDrawing */]();
                 
                 image.draw(url).then(() => {
                     const brightness = image.brightness();
@@ -509,7 +509,7 @@ const Typefont = (
                     if (brightness > 25 && brightness < 125)
                         image.binarize(brightness);
                     
-                    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__lib_image_opticalrecognition__["a" /* default */])(image.toDataURL()).then((res) => {
+                    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__lib_image_opticalrecognition__["a" /* OpticalRecognition */])(image.toDataURL()).then((res) => {
                         res.symbolsBase64 = _symbolsToBase64(image, res);
                         res.pivot = image;
                         resolve(res);
@@ -535,7 +535,7 @@ const Typefont = (
         
         const _prepareFontsIndex = (url = _OPTIONS.fontsIndex) => {
             return new Promise((resolve, reject) => {
-                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__lib_font_fontstorage__["a" /* default */])(url).then((res) => {
+                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__lib_font_fontstorage__["a" /* FontStorage */])(url).then((res) => {
                     if (res.content)
                         resolve(res.content);
                     else
@@ -571,7 +571,7 @@ const Typefont = (
         
         const _prepareFont = (name, url = _OPTIONS.fontsDirectory, data = _OPTIONS.fontsData) => {
             return new Promise((resolve, reject) => {
-                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__lib_font_fontstorage__["a" /* default */])(`${url}${name}/${data}`).then((res) => {
+                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__lib_font_fontstorage__["a" /* FontStorage */])(`${url}${name}/${data}`).then((res) => {
                     if (res.content)
                         resolve(res.content);
                     else
@@ -628,11 +628,11 @@ const Typefont = (
                     if (done == todo)
                         resolve(result);
                 };
-                const buff = __WEBPACK_IMPORTED_MODULE_1__lib_image_imagedrawing__["a" /* default */].base64ToBuffer;
+                const buff = __WEBPACK_IMPORTED_MODULE_1__lib_image_imagedrawing__["a" /* ImageDrawing */].base64ToBuffer;
                 let done = 0;
                 
                 for (const symbol in first)
-                    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__lib_image_imagecomparison__["a" /* default */])(buff(first[symbol]), buff(second[symbol]), _OPTIONS.analyticComparisonThreshold, _OPTIONS.sameSizeComparison)
+                    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__lib_image_imagecomparison__["a" /* ImageComparison */])(buff(first[symbol]), buff(second[symbol]), _OPTIONS.analyticComparisonThreshold, _OPTIONS.sameSizeComparison)
                         .then((res) => finalize(symbol, res))
                         .catch(reject);
             });
@@ -654,23 +654,6 @@ const Typefont = (
             }
             
             return calc / ll;
-        };
-        
-        /**
-         * _recognizeForStorage Given a screenshot with the a font aplhabet return the single symbols with a format ready to be storaged.
-         * @param {String} url The URL of the image.
-         * @return {Promise}
-        */
-        
-        const _recognizeForStorage = (url) => {
-            return new Promise((resolve, reject) => {
-                _prepare(url).then((res) => {
-                    resolve({
-                        meta: {},
-                        alpha: res.recognition.symbolsBase64
-                    });
-                }).catch(reject);
-            });
         };
         
         /**
@@ -719,8 +702,8 @@ const Typefont = (
     }
 
 ());
+/* harmony export (immutable) */ window.Typefont = __webpack_exports__["Typefont"] = Typefont;
 
-/* harmony default export */ window.Typefont = __webpack_exports__["default"] = (Typefont);
 
 /***/ })
 /******/ ]);

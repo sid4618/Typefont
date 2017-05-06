@@ -4,7 +4,7 @@
  * @author Vasile Pește <sirvasile@protonmail.ch>
 */
 
-const ImageComparison = (
+export const ImageComparison = (
 
     function (undefined)
     {
@@ -59,5 +59,3 @@ const ImageComparison = (
     }
 
 ());
-
-export default ImageComparison;

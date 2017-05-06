@@ -4,12 +4,12 @@
  * @version 0.1-alpha.0
 */
 
-import FontStorage from "./lib/font/fontstorage";
-import ImageDrawing from "./lib/image/imagedrawing";
-import OpticalRecognition from "./lib/image/opticalrecognition";
-import ImageComparison from "./lib/image/imagecomparison";
+import {FontStorage} from "./lib/font/fontstorage";
+import {ImageDrawing} from "./lib/image/imagedrawing";
+import {OpticalRecognition} from "./lib/image/opticalrecognition";
+import {ImageComparison} from "./lib/image/imagecomparison";
 
-const Typefont = (
+export const Typefont = (
 
     function (undefined)
     {
@@ -238,23 +238,6 @@ const Typefont = (
         };
         
         /**
-         * _recognizeForStorage Given a screenshot with the a font aplhabet return the single symbols with a format ready to be storaged.
-         * @param {String} url The URL of the image.
-         * @return {Promise}
-        */
-        
-        const _recognizeForStorage = (url) => {
-            return new Promise((resolve, reject) => {
-                _prepare(url).then((res) => {
-                    resolve({
-                        meta: {},
-                        alpha: res.recognition.symbolsBase64
-                    });
-                }).catch(reject);
-            });
-        };
-        
-        /**
          * _recognize Start the process to recognize the font of a text in a image.
          * @param {String} url The URL of the image.
          * @param {Object} [options = {}]
@@ -300,5 +283,3 @@ const Typefont = (
     }
 
 ());
-
-export default Typefont;

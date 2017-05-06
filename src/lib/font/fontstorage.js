@@ -3,7 +3,7 @@
  * @author Vasile Pește <sirvasile@protonmail.ch>
 */
 
-const FontStorage = (
+export const FontStorage = (
 
     function (undefined)
     {
@@ -29,7 +29,7 @@ const FontStorage = (
                         try {
                             result.content = JSON.parse(e.target.responseText);
                         }
-                        catch (e) {
+                        catch (ex) {
                             reject(`Unable to parse ${url}.`);
                         }
                     }
@@ -46,5 +46,3 @@ const FontStorage = (
     }
 
 ());
-
-export default FontStorage;

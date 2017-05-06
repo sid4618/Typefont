@@ -4,7 +4,7 @@
  * @author Vasile Pește <sirvasile@protonmail.ch>
 */
 
-const OpticalRecognition = (
+export const OpticalRecognition = (
 
     function (undefined)
     {
@@ -35,5 +35,3 @@ const OpticalRecognition = (
     }
 
 ());
-
-export default OpticalRecognition;

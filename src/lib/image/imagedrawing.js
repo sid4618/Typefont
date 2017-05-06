@@ -3,7 +3,7 @@
  * @author Vasile Pește <sirvasile@protonmail.ch>
 */
 
-const ImageDrawing = class {
+export const ImageDrawing = class {
     constructor () {
         this.canvas = document.createElement("canvas");
         this.context = this.canvas.getContext("2d");
@@ -13,12 +13,12 @@ const ImageDrawing = class {
      * draw Load a image inside the canvas (overriding the current frame).
      * @param {String} url The URL of the image to draw.
      * @param {Number} [scale = 1] Scale factor.
-     * @param {Number} [newWidth] New width.
-     * @param {Number} [newHeight] New height.
+     * @param {Number} [newWidth = undefined] New width.
+     * @param {Number} [newHeight = undefined] New height.
      * @return {Promise}
     */
     
-    draw (url, scale = 1, newWidth, newHeight)
+    draw (url, scale = 1, newWidth = undefined, newHeight = undefined)
     {
         return new Promise((resolve, reject) => {
             const image = document.createElement("img");
@@ -161,5 +161,3 @@ const ImageDrawing = class {
         return buffer;
     }
 };
-
-export default ImageDrawing;

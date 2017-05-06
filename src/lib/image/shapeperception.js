@@ -3,16 +3,16 @@
  * @author Vasile Pește <sirvasile@protonmail.ch>
 */
 
-import ImageDrawing from "./imagedrawing";
+import {ImageDrawing} from "./imagedrawing";
 
-const ShapePerception = (
+export const ShapePerception = (
 
     function (undefined)
     {
         "use strict";
         
         // Used as dimension for resizing the images.
-        const _PRECISION = 64;
+        const _PRECISION = 128;
         
         /**
          * _prepareImages Load and binarize two images as ImageDrawing instances.
@@ -36,11 +36,9 @@ const ShapePerception = (
                 let done = 0;
                 
                 img.draw(first, 1, precision, precision).then(() => {
-                    img.binarize(200);
                     finalize();
                 }).catch(reject);
                 img1.draw(second, 1, precision, precision).then(() => {
-                    img1.binarize(200);
                     finalize();
                 }).catch(reject); 
             });
@@ -61,13 +59,12 @@ const ShapePerception = (
             
             for (let i = 0, ll = data.length; i < ll; i += 4)
             {
-                if (w == width)
-                {
+                if (w == width) {
                     w = 0;
                     ++j;
                 }
                 
-                if (w == 0)
+                if (!w)
                     matrix.push([]);
                 
                 matrix[j].push(data[i] == 255 ? 1 : 0);
@@ -108,5 +105,3 @@ const ShapePerception = (
     }
 
 ());
-
-export default ShapePerception;
