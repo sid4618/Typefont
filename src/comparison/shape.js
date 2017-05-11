@@ -1,18 +1,16 @@
 /**
- * @module ShapePerception Used to compare images using a method that considers human perception.
+ * @module ShapePerception Used to compare two images perceptually.
  * @author Vasile Pește <sirvasile@protonmail.ch>
 */
 
-import {ImageDrawing} from "./imagedrawing";
+import {ImageDrawing} from "../image/imagedrawing";
 
 export const ShapePerception = (
 
     function (undefined)
     {
-        "use strict";
-        
-        // Used as dimension for resizing the images.
-        const _PRECISION = 128;
+        // Used as dimension when resizing the images to the same size.
+        const _SIZE = 64;
         
         /**
          * _prepareImages Load and binarize two images as ImageDrawing instances.
@@ -23,34 +21,23 @@ export const ShapePerception = (
         
         const _prepareImages = (first, second) => {
             return new Promise((resolve, reject) => {
-                const todo = 2;
                 const img = new ImageDrawing();
                 const img1 = new ImageDrawing();
-                const precision = _PRECISION;
-                const finalize = () => {
-                    ++done;
-                    
-                    if (done == todo)
-                        resolve([img, img1]);  
-                };
-                let done = 0;
+                const size = _SIZE;
                 
-                img.draw(first, 1, precision, precision).then(() => {
-                    finalize();
-                }).catch(reject);
-                img1.draw(second, 1, precision, precision).then(() => {
-                    finalize();
-                }).catch(reject); 
+                Promise.all([img.draw(first, 1, size, size), img1.draw(second, 1, size, size)])
+                    .then(() => resolve([img, img1]))
+                    .catch(reject);
             });
         };
         
         /**
-         * _getBinarizedPixelsMatrix Put the pixels of a binarized ImageDrawing instance in a matrix.
+         * _getBinarizedMatrix Put the pixels of a binarized ImageDrawing instance in a matrix.
          * @param {ImageDrawing} img
          * @return {Array}
         */
         
-        const _getBinarizedPixelsMatrix = (img) => {
+        const _getBinarizedMatrix = (img) => {
             const width = img.canvas.width;
             const data = img.context.getImageData(0, 0, width, img.canvas.height).data;
             const matrix = [];
@@ -84,8 +71,8 @@ export const ShapePerception = (
         const _compare = (first, second) => {
             return new Promise((resolve, reject) => {
                 _prepareImages(first, second).then((res) => {
-                    const matrix = _getBinarizedPixelsMatrix(res[0]);
-                    const matrix1 = _getBinarizedPixelsMatrix(res[1]);
+                    const matrix = _getBinarizedMatrix(res[0]);
+                    const matrix1 = _getBinarizedMatrix(res[1]);
                     const r = matrix.length;
                     const c = matrix[0].length;
                     let dist = 0;
@@ -95,10 +82,11 @@ export const ShapePerception = (
                             if (matrix[i][j] != matrix1[i][j])
                                 ++dist;
                     
+                    // Return the similarity percentage.
                     resolve(100 - (dist / (r * c) * 100));
                 }).catch(reject); 
             });
-    	};
+        };
         
         // Return the public context.
         return (first, second) => _compare(first, second);

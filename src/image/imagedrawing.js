@@ -1,9 +1,10 @@
 /**
- * @module ImageDrawing Used to create and manipulate images.
+ * @module ImageDrawing Used to manipulate images.
  * @author Vasile Pește <sirvasile@protonmail.ch>
 */
 
 export const ImageDrawing = class {
+
     constructor () {
         this.canvas = document.createElement("canvas");
         this.context = this.canvas.getContext("2d");
@@ -13,19 +14,19 @@ export const ImageDrawing = class {
      * draw Load a image inside the canvas (overriding the current frame).
      * @param {String} url The URL of the image to draw.
      * @param {Number} [scale = 1] Scale factor.
-     * @param {Number} [newWidth = undefined] New width.
-     * @param {Number} [newHeight = undefined] New height.
+     * @param {Number} [w = undefined] New width.
+     * @param {Number} [h = undefined] New height.
      * @return {Promise}
     */
     
-    draw (url, scale = 1, newWidth = undefined, newHeight = undefined)
+    draw (url, scale = 1, w = undefined, h = undefined)
     {
         return new Promise((resolve, reject) => {
             const image = document.createElement("img");
             
             image.onload = () => {
-                let width = newWidth || image.width;
-                let height = newHeight || image.height;
+                let width = w || image.width;
+                let height = h || image.height;
                 
                 width *= scale;
                 height *= scale;
@@ -36,7 +37,7 @@ export const ImageDrawing = class {
                 
                 resolve();
             };
-            image.onerror = image.onabort = reject;
+            image.onerror = image.onabort = () => reject(`Unable to load ${url}`);
             image.src = url;
         });
     }
@@ -65,7 +66,7 @@ export const ImageDrawing = class {
     /**
      * grayscale Turn the canvas into grayscale.
     */
-
+    
     grayscale ()
     {
         const canvas = this.context.getImageData(0, 0, this.canvas.width, this.canvas.height);
@@ -73,7 +74,7 @@ export const ImageDrawing = class {
         
         for (let i = 0, ll = data.length; i < ll; i += 4)
         {
-            let luma = data[i] * 0.2126 + data[i + 1] * 0.7152 + data[i + 2] * 0.0722;
+            const luma = data[i] * 0.2126 + data[i + 1] * 0.7152 + data[i + 2] * 0.0722;
             
             data[i] = data[i + 1] = data[i + 2] = luma;
         }
@@ -82,20 +83,41 @@ export const ImageDrawing = class {
     }
     
     /**
-     * binarize Binarize Turn the canvas into black and white.
-     * @param {Number} [threshold = 100] Threshold.
+     * reverse Reverse the colors of the canvas.
     */
     
-    binarize (threshold = 100)
+    reverse ()
     {
         const canvas = this.context.getImageData(0, 0, this.canvas.width, this.canvas.height);
         const data = canvas.data;
         
         for (let i = 0, ll = data.length; i < ll; i += 4)
         {
-            let luma = data[i] * 0.2126 + data[i + 1] * 0.7152 + data[i + 2] * 0.0722;
+            data[i] = 255 - data[i];
+            data[i + 1] = 255 - data[i + 1];
+            data[i + 2] = 255 - data[i + 2];
+        }
+        
+        this.context.putImageData(canvas, 0, 0);
+    }
+    
+    /**
+     * binarize Turn the canvas into black and white.
+    */
+    
+    binarize ()
+    {
+        const canvas = this.context.getImageData(0, 0, this.canvas.width, this.canvas.height);
+        const data = canvas.data;
+        
+        this.grayscale();
+        
+        for (let i = 0, ll = data.length; i < ll; i += 4)
+        {
+            const luma = data[i];
             
-            data[i] = data[i + 1] = data[i + 2] = luma > threshold ? 255 : 0;
+            // Consider: 40 < luma < 140.
+            data[i] = data[i + 1] = data[i + 2] = luma > 60 && luma < 160 ? 0 : 255;
         }
         
         this.context.putImageData(canvas, 0, 0);
@@ -112,9 +134,9 @@ export const ImageDrawing = class {
         let union = 0;
         
         for (let i = 0, ll = data.length; i < ll; i += 4)
-            union += (data[i] + data[i + 1] + data[i + 2]) / 3;
+            union += (data[i] + data[i + 1] + data[i + 2] + data[i + 3]) / 4;
         
-        return union / data.length / 3;
+        return union / data.length / 4;
     }
     
     /**
@@ -128,6 +150,7 @@ export const ImageDrawing = class {
     
     /**
      * width Get the width of the canvas.
+     * @return {Number}
     */
     
     get width () {
@@ -136,10 +159,20 @@ export const ImageDrawing = class {
     
     /**
      * height Get the height of the canvas.
+     * @return {Number}
     */
     
     get height () {
         return this.canvas.height;
+    }
+    
+    /**
+     * data Get the pixels of the canvas.
+     * @return {Array}
+    */
+    
+    get data () {
+        return this.context.getImageData(0, 0, this.canvas.width, this.canvas.height).data;
     }
     
     /**
@@ -155,9 +188,10 @@ export const ImageDrawing = class {
         const uint = new Uint8Array(buffer);
         let ll = 0;
         
-        for (let ch of decode)
+        for (const ch of decode)
             uint[ll++] = ch.charCodeAt(0);
         
         return buffer;
     }
+
 };

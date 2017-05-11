@@ -1,31 +1,33 @@
 /**
  * @module Typefont Used to recognize the font of a text in a image.
  * @author Vasile Pește <sirvasile@protonmail.ch>
- * @version 0.1-alpha.0
+ * @version 0.1-beta.0
 */
 
-import {FontStorage} from "./lib/font/fontstorage";
-import {ImageDrawing} from "./lib/image/imagedrawing";
-import {OpticalRecognition} from "./lib/image/opticalrecognition";
-import {ImageComparison} from "./lib/image/imagecomparison";
+import {FontStorage} from "./font/fontstorage";
+import {ImageDrawing} from "./image/imagedrawing";
+import {OpticalRecognition} from "./recognition/opticalrecognition";
+import {AnalyticPerception} from "./comparison/analytic";
+import {ShapePerception} from "./comparison/shape";
 
 export const Typefont = (
 
     function (undefined)
     {
-        "use strict";
-        
         // Used as global options.
         const _OPTIONS = {
             // The minimum confidence that a symbol must have to be accepted in the comparison queue.
             // The confidence value is assigned by the OCR engine.
-            minSymbolConfidence: 30,
+            minSymbolConfidence: 15,
             
             // Used as pixel based image comparison threshold.
-            analyticComparisonThreshold: 0.52161,
+            analyticComparisonThreshold: 0.5,
             
             // Scale the images to the same size before comparison?
-            sameSizeComparison: true,
+            sameSizeComparison: false,
+            
+            // Recognition timeout [s].
+            recognitionTimeout: 60,
             
             // The URL of the directory containing the fonts.
             fontsDirectory: "storage/fonts/",
@@ -48,13 +50,32 @@ export const Typefont = (
             const data = {};
             const symbols = res.symbols;
             
-            // This will skip double letters! Note the confidence condition.
+            // This will skip double letters!
+            // Note the confidence condition.
             for (const symbol of symbols)
                 if (symbol.confidence > _OPTIONS.minSymbolConfidence)
-                    data[symbol.text] = img.crop(symbol.bbox.x0, symbol.bbox.y0, symbol.bbox.x1, symbol.bbox.y1).substr(22);
+                    data[symbol.text] = img.crop(symbol.bbox.x0, symbol.bbox.y0, symbol.bbox.x1, symbol.bbox.y1);
             
-            // Note that "data:image/png;base64," is trimmed with substr(22)!
             return data;
+        };
+        
+        /**
+         * _needReverse Check if a binarized ImageDrawing instance must be reversed (necessary for the comparison).
+         * @param {Array} data The data of the ImageDrawing instance.
+         * @return {Boolean}
+        */
+        
+        const _needReverse = (data) => {
+            let black = 0;
+            let white = 0;
+            
+            for (let i = 0, ll = data.length; i < ll; i += 4)
+                if (!data[i])
+                    ++black;
+                else
+                    ++white;
+            
+            return black > white;
         };
         
         /**
@@ -84,79 +105,21 @@ export const Typefont = (
                 const image = new ImageDrawing();
                 
                 image.draw(url).then(() => {
-                    const brightness = image.brightness();
+                    image.binarize();
                     
-                    // Binarize the image if its brightness is in this specific range (better results).
-                    if (brightness > 25 && brightness < 125)
-                        image.binarize(brightness);
+                    if (_needReverse(image.data))
+                        image.reverse();
+                    
+                    // document.body.appendChild(image.canvas);
+                    
+                    const timeout = setTimeout(() => reject(`Unable to recognize ${url}`), _OPTIONS.recognitionTimeout * 1000);
                     
                     OpticalRecognition(image.toDataURL()).then((res) => {
+                        clearTimeout(timeout);
                         res.symbolsBase64 = _symbolsToBase64(image, res);
                         res.pivot = image;
                         resolve(res);
                     }).catch(reject);
-                }).catch(reject);
-            });
-        };
-        
-        /**
-         * _prepareFontsIndex Request the index of the fonts.
-         * Established the following JSON structure for a fonts index file.
-         * {
-         *     "index": [
-         *         "font-name",
-         *         "font-name-1",
-         *         "font-name-2",
-         *         ...
-         *     ]
-         * }
-         * @param {String} [url = _OPTIONS.fontsIndex] The URL of the fonts index JSON file.
-         * @return {Promise}
-        */
-        
-        const _prepareFontsIndex = (url = _OPTIONS.fontsIndex) => {
-            return new Promise((resolve, reject) => {
-                FontStorage(url).then((res) => {
-                    if (res.content)
-                        resolve(res.content);
-                    else
-                        reject("Unable to open the fonts index.");
-                }).catch(reject);
-            });
-        };
-        
-        /**
-         * _prepareFont Request a font.
-         * Established the following JSON structure for a font file.
-         * {
-         *     "meta": {
-         *         "name": "...,
-         *         "author": "...",
-         *         "uri": "...",
-         *         "key": "value",
-         *         ...
-         *     },
-         *     "alpha": {
-         *         "a": "base64",
-         *         "b": "base64",
-         *         "c": "base64",
-         *         ...
-         *     }
-         * }
-         * All meta keys and values will be included in the final result.
-         * @param {String} name The name of the font.
-         * @param {String} [url = _OPTIONS.fontsDirectory] The URL of the directory containing the fonts.
-         * @param {String} [data = _OPTIONS.fontsData] The name of the JSON file containing the font data.
-         * @return {Promise}
-        */
-        
-        const _prepareFont = (name, url = _OPTIONS.fontsDirectory, data = _OPTIONS.fontsData) => {
-            return new Promise((resolve, reject) => {
-                FontStorage(`${url}${name}/${data}`).then((res) => {
-                    if (res.content)
-                        resolve(res.content);
-                    else
-                        reject(`Unable to open the ${name} font.`);
                 }).catch(reject);
             });
         };
@@ -169,29 +132,20 @@ export const Typefont = (
         
         const _prepare = (url) => {
             return new Promise((resolve, reject) => {
-                const todo = 2;
-                const result = {};
-                const finalize = () => {
-                    ++done;
-                    
-                    if (done == todo)
-                        resolve(result);
-                };
-                let done = 0;
-                
-                _prepareImageRecognition(url).then((res) => {
-                    result.recognition = res;
-                    finalize();
+                Promise.all([
+                    _prepareImageRecognition(url),
+                    FontStorage.prepareFontsIndex(_OPTIONS.fontsIndex)
+                ]).then((res) => {
+                    resolve({
+                        recognition: res[0],
+                        fonts: res[1]
+                    });
                 }).catch(reject);
-                _prepareFontsIndex().then((res) => {
-                    result.fonts = res;
-                    finalize();
-                }).catch(reject); 
             });
         };
         
         /**
-         * _compare Compare two lists of symbols using perceptual and pixel based image comparison.
+         * _compare Compare two lists of symbols using a perceptual and a pixel based image comparison.
          * @param {Object} first The first list of symbols.
          * @param {Object} second The second list of symbols.
          * @return {Promise}
@@ -209,18 +163,25 @@ export const Typefont = (
                     if (done == todo)
                         resolve(result);
                 };
-                const buff = ImageDrawing.base64ToBuffer;
                 let done = 0;
                 
                 for (const symbol in first)
-                    ImageComparison(buff(first[symbol]), buff(second[symbol]), _OPTIONS.analyticComparisonThreshold, _OPTIONS.sameSizeComparison)
-                        .then((res) => finalize(symbol, res))
-                        .catch(reject);
+                {
+                    Promise.all([
+                        AnalyticPerception(first[symbol], second[symbol], _OPTIONS.analyticComparisonThreshold, _OPTIONS.sameSizeComparison),
+                        ShapePerception(first[symbol], second[symbol])
+                    ]).then((res) => {
+                        finalize(symbol, {
+                            analytic: res[0],
+                            shape: res[1]
+                        });
+                    }).catch(reject);
+                }
             });
         };
         
         /**
-         * _average Used to compute the average similarity of a given result of the _recognize process.
+         * _average Used to compute the average similarity of a given font comparison result of the _recognize process.
          * @param {Object} res
          * @return {Number}
         */
@@ -229,9 +190,10 @@ export const Typefont = (
             let calc = 0;
             let ll = 0;
             
-            for (const symbol in res) {
+            for (const symbol in res)
+            {
+                calc += (res[symbol].analytic + res[symbol].shape) / 2;
                 ++ll;
-                calc += (res[symbol].perceptual + res[symbol].analytical) / 2;
             }
             
             return calc / ll;
@@ -252,28 +214,33 @@ export const Typefont = (
                 _prepare(url).then((res) => {
                     const fonts = res.fonts.index;
                     const todo = fonts.length;
-                    const result = {};
+                    const result = [];
                     const progress = _OPTIONS.progress;
                     const recognition = res.recognition.symbolsBase64;
                     const finalize = (name, val, font) => {
-                        ++done;
+                        const meta = font.meta || {};
                         
-                        result[name] = font.meta || {};
-                        result[name].similarity = _average(val);
+                        meta.similarity = _average(val);
+                        meta.name = meta.name || name;
+                        result.push(meta);
                         
                         if (progress)
                             progress(name, val, done / todo);
                         
-                        if (done == todo)
+                        if (++done == todo) {
+                            result.sort((a, b) => b.similarity - a.similarity);
                             resolve(result);
+                        }
                     };
                     let done = 0;
                     
                     for (const name of fonts)
-                        _prepareFont(name).then((font) => {
+                    {
+                        FontStorage.prepareFont(`${_OPTIONS.fontsDirectory}${name}/${_OPTIONS.fontsData}`).then((font) => {
                             _symbolsToDomain(recognition, font.alpha);
                             _compare(recognition, font.alpha).then((fin) => finalize(name, fin, font)).catch(reject);
                         }).catch(reject);
+                    }
                 }).catch(reject); 
             });
         };

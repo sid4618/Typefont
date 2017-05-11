@@ -1,6 +1,5 @@
 /**
- * @module OpticalRecognition Used as Optical Character Recognition module.
- * Tesseract <https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js>
+ * @module OpticalRecognition Used to recognize the text in a image.
  * @author Vasile Pește <sirvasile@protonmail.ch>
 */
 
@@ -8,9 +7,7 @@ export const OpticalRecognition = (
 
     function (undefined)
     {
-        "use strict";
-        
-        // Used as recognition options.
+        // Used as global options.
         const _OPTIONS = {
             lang: "eng",
             tessedit_char_whitelist: "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789"
@@ -28,7 +25,7 @@ export const OpticalRecognition = (
                 _OPTIONS[option] = options[option];
             
             return Tesseract.recognize(url, _OPTIONS);
-    	};
+        };
         
         // Return the public context.
         return (url, options) => _recognize(url, options);
