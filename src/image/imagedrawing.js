@@ -116,8 +116,8 @@ export const ImageDrawing = class {
         {
             const luma = data[i];
             
-            // Consider: 40 < luma < 140.
-            data[i] = data[i + 1] = data[i + 2] = luma > 60 && luma < 160 ? 0 : 255;
+            // Consider: 40 <= luma <= 140.
+            data[i] = data[i + 1] = data[i + 2] = luma >= 60 && luma <= 160 ? 0 : 255;
         }
         
         this.context.putImageData(canvas, 0, 0);
