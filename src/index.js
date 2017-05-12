@@ -53,7 +53,7 @@ export const Typefont = (
             // This will skip double letters!
             // Note the confidence condition.
             for (const symbol of symbols)
-                if (symbol.confidence > _OPTIONS.minSymbolConfidence)
+                if (symbol.confidence >= _OPTIONS.minSymbolConfidence)
                     data[symbol.text] = img.crop(symbol.bbox.x0, symbol.bbox.y0, symbol.bbox.x1, symbol.bbox.y1);
             
             return data;
@@ -109,8 +109,6 @@ export const Typefont = (
                     
                     if (_needReverse(image.data))
                         image.reverse();
-                    
-                    // document.body.appendChild(image.canvas);
                     
                     const timeout = setTimeout(() => reject(`Unable to recognize ${url}`), _OPTIONS.recognitionTimeout * 1000);
                     
