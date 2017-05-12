@@ -1,4 +1,6 @@
 # Typefont
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/sirvasile)
+
 This project tries to recognize the font of a text in a photo using a set of algorithms and libraries. The goal is to obtain accurate results with the image as only input avoiding other manual processes.
 
 ## Usage
