@@ -4,11 +4,11 @@
  * @version 0.1-beta.0
 */
 
-import {FontStorage} from "./font/fontstorage";
-import {ImageDrawing} from "./image/imagedrawing";
-import {OpticalRecognition} from "./recognition/opticalrecognition";
-import {AnalyticPerception} from "./comparison/analytic";
-import {ShapePerception} from "./comparison/shape";
+import {FontStorage} from "./font/fontstorage.js";
+import {ImageDrawing} from "./image/imagedrawing.js";
+import {OpticalRecognition} from "./recognition/opticalrecognition.js";
+import {AnalyticPerception} from "./comparison/analytic.js";
+import {ShapePerception} from "./comparison/shape.js";
 
 export const Typefont = (
 

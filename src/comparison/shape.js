@@ -3,7 +3,7 @@
  * @author Vasile Pește <sirvasile@protonmail.ch>
 */
 
-import {ImageDrawing} from "../image/imagedrawing";
+import {ImageDrawing} from "../image/imagedrawing.js";
 
 export const ShapePerception = (
 
