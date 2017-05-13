@@ -9,21 +9,24 @@ export const ShapePerception = (
 
     function (undefined)
     {
-        // Used as dimension when resizing the images to the same size.
-        const _SIZE = 64;
-        
         /**
          * _prepareImages Load and binarize two images as ImageDrawing instances.
          * @param {String} first The URL of the first image.
          * @param {String} second The URL of the second image.
+         * @param {Object} [options = {}]
          * @return {Promise}
         */
         
-        const _prepareImages = (first, second) => {
+        const _prepareImages = (first, second, options = {}) => {
+            const {
+                // Used as dimension when resizing the images to the same size.
+                perceptualComparisonSize = 64
+            } = options;
+            
             return new Promise((resolve, reject) => {
                 const img = new ImageDrawing();
                 const img1 = new ImageDrawing();
-                const size = _SIZE;
+                const size = perceptualComparisonSize;
                 
                 Promise.all([img.draw(first, 1, size, size), img1.draw(second, 1, size, size)])
                     .then(() => resolve([img, img1]))
@@ -65,12 +68,13 @@ export const ShapePerception = (
          * _compare Compare two images using a method based on human perception (Hamming distance).
          * @param {String} first The URL of the first image.
          * @param {String} second The URL of the second image.
+         * @param {Object} [options = {}]
          * @return {Promise}
         */
         
-        const _compare = (first, second) => {
+        const _compare = (first, second, options = {}) => {
             return new Promise((resolve, reject) => {
-                _prepareImages(first, second).then((res) => {
+                _prepareImages(first, second, options).then((res) => {
                     const matrix = _getBinarizedMatrix(res[0]);
                     const matrix1 = _getBinarizedMatrix(res[1]);
                     const r = matrix.length;
@@ -84,12 +88,12 @@ export const ShapePerception = (
                     
                     // Return the similarity percentage.
                     resolve(100 - (dist / (r * c) * 100));
-                }).catch(reject); 
+                }).catch(reject);
             });
         };
         
         // Return the public context.
-        return (first, second) => _compare(first, second);
+        return (first, second, options) => _compare(first, second, options);
     }
 
 ());

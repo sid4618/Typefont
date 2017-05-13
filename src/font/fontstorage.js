@@ -7,22 +7,24 @@ export const FontStorage = (
 
     function (undefined)
     {
-        // Used as request timeout [ms].
-        const _TIMEOUT = 2000;
-        
         /**
          * _fetch Retrieve and deserialize a JSON structure stored in a file.
          * @param {String} url The URL of the file to fetch.
-         * @param {Number} [timeout = _TIMEOUT] The timeout of the request [ms].
+         * @param {Object} [options = {}]
          * @return {Promise}
         */
         
-        const _fetch = (url, timeout = _TIMEOUT) => {
+        const _fetch = (url, options = {}) => {
+            const {
+                // Used as request timeout [ms].
+                fontRequestTimeout = 2000
+            } = options;
+            
             return new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest();
                 
                 xhr.open("GET", url);
-                xhr.timeout = timeout;
+                xhr.timeout = fontRequestTimeout;
                 xhr.onload = (e) => {
                     const result = {};
                     
@@ -56,12 +58,13 @@ export const FontStorage = (
          *     ]
          * }
          * @param {String} url The URL of the fonts index JSON file.
+         * @param {Object} [options = {}]
          * @return {Promise}
         */
         
-        const _prepareFontsIndex = (url) => {
+        const _prepareFontsIndex = (url, options = {}) => {
             return new Promise((resolve, reject) => {
-                _fetch(url).then((res) => {
+                _fetch(url, options).then((res) => {
                     const content = res.content;
                     
                     if (Array.isArray(content.index))
@@ -92,12 +95,13 @@ export const FontStorage = (
          * }
          * Each key and value of the meta object will be included in the final result.
          * @param {String} url The URL of the directory containing the fonts.
+         * @param {Object} [options = {}]
          * @return {Promise}
         */
         
-        const _prepareFont = (url) => {
+        const _prepareFont = (url, options = {}) => {
             return new Promise((resolve, reject) => {
-                _fetch(url).then((res) => {
+                _fetch(url, options).then((res) => {
                     const alpha = res.content.alpha;
                     
                     if (alpha)
@@ -116,8 +120,8 @@ export const FontStorage = (
         
         // Return the public context.
         return {
-            prepareFontsIndex: (url) => _prepareFontsIndex(url),
-            prepareFont: (url) => _prepareFont(url)     
+            prepareFontsIndex: (url, options) => _prepareFontsIndex(url, options),
+            prepareFont: (url, options) => _prepareFont(url, options)     
         };
     }
 
