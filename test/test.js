@@ -35,8 +35,7 @@ import {Typefont} from "../src/index.js";
                     console.warn(`Test ${j} at i => ${i} [expected: ${_RESULTS[j][i]} but recevied ${res[i].name}]`);
                 }
             
-            if (ex == 0)
-                console.log(`Test ${j} => OK!`);
+            console.log(`Test ${j}`, res, ex == 0 ? "Passed" : "Not Passed");
         };
         
         for (let i = 0, ll = _TESTS.length; i < ll; ++i)
