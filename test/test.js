@@ -25,7 +25,7 @@ import {Typefont} from "../src/index.js";
             ["Nunito Sans", "Roboto", "Raleway", "Ubuntu", "Aldrich", "Lora", "Times New Roman"]
         ];
         
-        const test = (res, j) => {
+        const _test = (res, j) => {
             let ex = 0;
             
             for (let i = 0, ll = _RESULTS[j].length; i < ll; ++i)
@@ -39,7 +39,7 @@ import {Typefont} from "../src/index.js";
         };
         
         for (let i = 0, ll = _TESTS.length; i < ll; ++i)
-            Typefont(`${_DIR}${_TESTS[i]}`, _OPTIONS).then((res) => test(res, i)).catch((ex) => console.log(ex));
+            Typefont(`${_DIR}${_TESTS[i]}`, _OPTIONS).then((res) => _test(res, i)).catch((ex) => console.log(ex));
     }
 
 ());
