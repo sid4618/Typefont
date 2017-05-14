@@ -38,7 +38,7 @@ Option | Type | Description | Default
 `fontsData` | `String` | The name of the file containing the JSON data of a font. | `data.json`
 `fontsIndex` | `String` | The URL of the fonts index JSON file. | `storage/index.json`
 `fontRequestTimeout` | `Number` | Font request timeout [ms]. | `2000`
-`textRecognitionTimeout` | `Number` | Recognition timeout [s]. | `60`
+`textRecognitionTimeout` | `Number` | Text recognition timeout [s]. | `60`
 `textRecognitionBinarization` | `Boolean` | Binarize the image before the recognition? | `true`
 
 ### Example
