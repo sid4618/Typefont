@@ -9,16 +9,23 @@ import {Typefont} from "../src/index.js";
 
     function (undefined)
     {
+        // Test options.
         const _OPTIONS = {
             fontsIndex: "../storage/index.json",
             fontsDirectory: "../storage/fonts/"  
         };
+        
+        // Directory of the images to recognize.
         const _DIR = "images/";
+        
+        // List of the images to recognize.
         const _TESTS = [
             "book.png",
             "book1.png",
             "web.png"
         ];
+        
+        // Results to match.
         const _RESULTS = [
             ["Roboto", "Ubuntu", "Nunito Sans", "Aldrich", "Raleway", "Lora", "Times New Roman"],
             ["Lora", "Times New Roman", "Ubuntu", "Nunito Sans", "Roboto", "Raleway", "Aldrich"],
