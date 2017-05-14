@@ -85,19 +85,24 @@ export const Typefont = (
         const _prepareImageRecognition = (url, options = {}) => {
             const {
                 // Recognition timeout [s].
-                recognitionTimeout = 60
+                textRecognitionTimeout = 60,
+                // Binarize the image before the recognition?
+                textRecognitionBinarization = true
             } = options;
             
             return new Promise((resolve, reject) => {
                 const image = new ImageDrawing();
                 
                 image.draw(url).then(() => {
-                    image.binarize();
+                    if (textRecognitionBinarization)
+                    {
+                        image.binarize();
+                        
+                        if (_needReverse(image.data))
+                            image.reverse();   
+                    }
                     
-                    if (_needReverse(image.data))
-                        image.reverse();
-                    
-                    const timeout = setTimeout(() => reject(`Unable to recognize ${url}`), recognitionTimeout * 1000);
+                    const timeout = setTimeout(() => reject(`Unable to recognize ${url}`), textRecognitionTimeout * 1000);
                     
                     OpticalRecognition(image.toDataURL()).then((res) => {
                         clearTimeout(timeout);
@@ -213,7 +218,7 @@ export const Typefont = (
                     const fonts = res.fonts.index;
                     const todo = fonts.length;
                     const result = [];
-                    const recognition = res.recognition.symbolsBase64;
+                    const symbols = res.recognition.symbolsBase64;
                     const finalize = (name, val, font) => {
                         const meta = font.meta || {};
                         
@@ -234,8 +239,8 @@ export const Typefont = (
                     for (const name of fonts)
                     {
                         FontStorage.prepareFont(`${fontsDirectory}${name}/${fontsData}`).then((font) => {
-                            _symbolsToDomain(recognition, font.alpha);
-                            _compare(recognition, font.alpha, options).then((fin) => finalize(name, fin, font)).catch(reject);
+                            _symbolsToDomain(symbols, font.alpha);
+                            _compare(symbols, font.alpha, options).then((fin) => finalize(name, fin, font)).catch(reject);
                         }).catch(reject);
                     }
                 }).catch(reject); 
