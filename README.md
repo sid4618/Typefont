@@ -6,11 +6,11 @@ Typefont allows you to recognize the font of a text in a photo using a set of al
 ## Usage
 Import the main function and invoke it like in the following script.
 ```javascript
-import {Typefont} from "./index/src";
+import {Typefont} from "./src/index.js";
 
 Typefont("path/image.png").then((res) => console.table(res));
 ```
-The first argument can be: `path`, `canvas`, `image`, `base64`. The function returns a Promise which when is resolved returns an array (containing each font compared) which is ordered in descending order (considering the similarity percentage).
+The first argument can be the `path` or the `base64` of the image. The function returns a Promise which when is resolved returns an array (containing each font compared) which is ordered in descending order (considering the similarity percentage).
 
 ## Preview
 Text on the cover of a book (texts are in italian because I live in Italy).
