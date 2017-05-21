@@ -8,7 +8,7 @@ export const FontStorage = (
     function (undefined)
     {
         /**
-         * _fetch Retrieve and deserialize a JSON structure stored in a file.
+         * _fetch Used to retrieve and deserialize a JSON structure stored in a file.
          * @param {String} url The URL of the file to fetch.
          * @param {Object} [options = {}]
          * @return {Promise}
@@ -35,20 +35,20 @@ export const FontStorage = (
                             result.content = JSON.parse(e.target.responseText);
                         }
                         catch (ex) {
-                            reject(`Unable to parse ${url} content`);
+                            reject(ex);
                         }
                     }
                     
                     resolve(result);
                 };
-                xhr.onerror = xhr.onabort = () => reject(`Unable to open ${url}`);
+                xhr.onerror = xhr.onabort = reject;
                 xhr.send();
             });
         };
         
         /**
-         * _prepareFontsIndex Request a file containing the index of the fonts.
-         * Established the following JSON structure for a fonts index file.
+         * _prepareFontsIndex Used to request a index of fonts.
+         * Established the following JSON structure for a index of fonts.
          * {
          *     "index": [
          *         "font-name",
@@ -57,27 +57,24 @@ export const FontStorage = (
          *         ...
          *     ]
          * }
-         * @param {String} url The URL of the fonts index JSON file.
+         * @param {String} url The URL of the index of fonts file.
          * @param {Object} [options = {}]
          * @return {Promise}
         */
         
-        const _prepareFontsIndex = (url, options = {}) => {
-            return new Promise((resolve, reject) => {
-                _fetch(url, options).then((res) => {
-                    const content = res.content;
-                    
-                    if (Array.isArray(content.index))
-                        resolve(content);
-                    else
-                        reject(`The JSON structure of ${url} does not meet the established format for the fonts index`);
-                }).catch(reject);
-            });
+        const _prepareFontsIndex = async (url, options = {}) => {
+            const request = await _fetch(url, options);
+            const content = request.content;
+            
+            if (!Array.isArray(content.index))
+                content.index = [];
+            
+            return content;
         };
         
         /**
-         * _prepareFont Request a font.
-         * Established the following JSON structure for a font file.
+         * _prepareFont Used to request a font.
+         * Established the following JSON structure for a font.
          * {
          *     "meta": {
          *         "name": "...,
@@ -93,29 +90,26 @@ export const FontStorage = (
          *         ...
          *     }
          * }
-         * Each key and value of the meta object will be included in the final result.
-         * @param {String} url The URL of the directory containing the fonts.
+         * @param {String} url The URL of the font file.
          * @param {Object} [options = {}]
          * @return {Promise}
         */
         
-        const _prepareFont = (url, options = {}) => {
-            return new Promise((resolve, reject) => {
-                _fetch(url, options).then((res) => {
-                    const alpha = res.content.alpha;
-                    
-                    if (alpha)
-                    {
-                        for (const symbol in alpha)
-                            alpha[symbol] = `data:image/png;base64,${alpha[symbol]}`;
-                        
-                        resolve(res.content);
-                    }
-                    else {
-                        reject(`The JSON structure of ${url} does not meet the established format for a font data file`);
-                    }
-                }).catch(reject);
-            });
+        const _prepareFont = async (url, options = {}) => {
+            const request = await _fetch(url, options);
+            const alpha = request.content.alpha;
+            const meta = request.content.meta;
+            
+            if (typeof alpha === "object")
+                for (const symbol in alpha)
+                    alpha[symbol] = `data:image/png;base64,${alpha[symbol]}`;
+            else
+                request.content.alpha = {};
+            
+            if (typeof meta !== "object")
+                request.content.meta = {};
+            
+            return request.content;
         };
         
         // Return the public context.
