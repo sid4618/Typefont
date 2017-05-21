@@ -3,50 +3,38 @@
  * @author Vasile Pește <sirvasile@protonmail.ch>
 */
 
-import {Typefont} from "../src/index.js";
+import { Typefont } from "../src/index.js";
 
-(
-
-    function (undefined)
+const test = async (options) => {
+    const dir = "images/";
+    const images = [
+        "book.png",
+        "book1.png",
+        "web.png"
+    ];
+    const results = [
+        ["Roboto", "Ubuntu", "Nunito Sans", "Aldrich", "Raleway", "Lora", "Times New Roman"],
+        ["Lora", "Times New Roman", "Ubuntu", "Nunito Sans", "Roboto", "Raleway", "Aldrich"],
+        ["Nunito Sans", "Roboto", "Raleway", "Ubuntu", "Aldrich", "Lora", "Times New Roman"]
+    ];
+    
+    for (let i = 0, ll = images.length; i < ll; ++i)
     {
-        // Test options.
-        const _OPTIONS = {
-            fontsIndex: "../storage/index.json",
-            fontsDirectory: "../storage/fonts/"  
-        };
+        const res = await Typefont(`${dir}${images[i]}`, options);
+        let ex = 0;
         
-        // Directory of the images to recognize.
-        const _DIR = "images/";
+        for (let j = 0, llj = results[i].length; j < llj; ++j)
+            if (results[i][j] != res[j].name)
+            {
+                ++ex;
+                console.warn(`Test ${i} at j => ${j} [expected: ${results[i][j]} but recevied ${res[j].name}]`);
+            }
         
-        // List of the images to recognize.
-        const _TESTS = [
-            "book.png",
-            "book1.png",
-            "web.png"
-        ];
-        
-        // Results to match.
-        const _RESULTS = [
-            ["Roboto", "Ubuntu", "Nunito Sans", "Aldrich", "Raleway", "Lora", "Times New Roman"],
-            ["Lora", "Times New Roman", "Ubuntu", "Nunito Sans", "Roboto", "Raleway", "Aldrich"],
-            ["Nunito Sans", "Roboto", "Raleway", "Ubuntu", "Aldrich", "Lora", "Times New Roman"]
-        ];
-        
-        const _test = (res, j) => {
-            let ex = 0;
-            
-            for (let i = 0, ll = _RESULTS[j].length; i < ll; ++i)
-                if (_RESULTS[j][i] != res[i].name)
-                {
-                    ++ex;
-                    console.warn(`Test ${j} at i => ${i} [expected: ${_RESULTS[j][i]} but recevied ${res[i].name}]`);
-                }
-            
-            console.log(`Test ${j}`, res, ex == 0 ? "Passed" : "Not Passed");
-        };
-        
-        for (let i = 0, ll = _TESTS.length; i < ll; ++i)
-            Typefont(`${_DIR}${_TESTS[i]}`, _OPTIONS).then((res) => _test(res, i)).catch((ex) => console.log(ex));
+        console.log(`Test ${i}`, res, !ex ? "Passed" : "Not Passed");
     }
+};
 
-());
+test({
+    fontsIndex: "../storage/index.json",
+    fontsDirectory: "../storage/fonts/"
+});
