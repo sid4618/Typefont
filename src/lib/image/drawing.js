@@ -3,23 +3,23 @@
  * @author Vasile Pește <sirvasile@protonmail.ch>
 */
 
-export const ImageDrawing = class {
-
+export class ImageDrawing 
+{
     constructor () {
         this.canvas = document.createElement("canvas");
         this.context = this.canvas.getContext("2d");
     }
     
     /**
-     * draw Load a image inside the canvas (overriding the current frame).
+     * draw Used to load a image inside the canvas (overriding the current frame).
      * @param {String} url The URL of the image to draw.
+     * @param {Number} [w] New width.
+     * @param {Number} [h] New height.
      * @param {Number} [scale = 1] Scale factor.
-     * @param {Number} [w = undefined] New width.
-     * @param {Number} [h = undefined] New height.
      * @return {Promise}
     */
     
-    draw (url, scale = 1, w = undefined, h = undefined)
+    draw (url, w, h, scale = 1)
     {
         return new Promise((resolve, reject) => {
             const image = document.createElement("img");
@@ -43,7 +43,7 @@ export const ImageDrawing = class {
     }
     
     /**
-     * crop Extract a specific area from the current frame.
+     * crop Used to crop a specific area from the current frame.
      * @param {Number} x
      * @param {Number} y
      * @param {Number} width
@@ -64,7 +64,7 @@ export const ImageDrawing = class {
     }
     
     /**
-     * grayscale Turn the canvas into grayscale.
+     * grayscale Used to turn the frame into grayscale.
     */
     
     grayscale ()
@@ -83,7 +83,7 @@ export const ImageDrawing = class {
     }
     
     /**
-     * reverse Reverse the colors of the canvas.
+     * reverse Used to reverse the colors of the frame.
     */
     
     reverse ()
@@ -102,7 +102,7 @@ export const ImageDrawing = class {
     }
     
     /**
-     * binarize Turn the canvas into black and white.
+     * binarize Used to turn the frame into black and white.
     */
     
     binarize ()
@@ -124,7 +124,7 @@ export const ImageDrawing = class {
     }
     
     /**
-     * brightness Get the average brightness of the current frame.
+     * brightness Used to get the average brightness of the current frame.
      * @return {Number}
     */
     
@@ -134,13 +134,13 @@ export const ImageDrawing = class {
         let union = 0;
         
         for (let i = 0, ll = data.length; i < ll; i += 4)
-            union += (data[i] + data[i + 1] + data[i + 2] + data[i + 3]) / 4;
+            union += (data[i] + data[i + 1] + data[i + 2]) / 3;
         
-        return union / data.length / 4;
+        return union / data.length / 3;
     }
     
     /**
-     * toDataURL Get the base64 data image/png of the current frame.
+     * toDataURL Used to get the base64 data image/png of the current frame.
      * @return {String}
     */
     
@@ -149,7 +149,15 @@ export const ImageDrawing = class {
     }
     
     /**
-     * width Get the width of the canvas.
+     * clear Used to clear the frame.
+    */
+    
+    clear () {
+        this.context.clearRect(0, 0, this.width, this.height);
+    }
+    
+    /**
+     * width Used to get the width of the frame.
      * @return {Number}
     */
     
@@ -158,7 +166,7 @@ export const ImageDrawing = class {
     }
     
     /**
-     * height Get the height of the canvas.
+     * height Used to get the height of the frame.
      * @return {Number}
     */
     
@@ -167,7 +175,7 @@ export const ImageDrawing = class {
     }
     
     /**
-     * data Get the pixels of the canvas.
+     * data Used to get the pixels of the frame.
      * @return {Array}
     */
     
@@ -176,7 +184,7 @@ export const ImageDrawing = class {
     }
     
     /**
-     * base64ToBuffer Serialize a base64 string to ArrayBuffer.
+     * base64ToBuffer Used to serialize a base64 string to ArrayBuffer.
      * @param {String} base64 The base64 string.
      * @return {ArrayBuffer}
     */
@@ -193,5 +201,4 @@ export const ImageDrawing = class {
         
         return buffer;
     }
-
-};
+}

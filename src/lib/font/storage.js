@@ -47,7 +47,7 @@ export const FontStorage = (
         };
         
         /**
-         * _prepareFontsIndex Used to request a index of fonts.
+         * _requestFontsIndex Used to request a index of fonts.
          * Established the following JSON structure for a index of fonts.
          * {
          *     "index": [
@@ -62,7 +62,7 @@ export const FontStorage = (
          * @return {Promise}
         */
         
-        const _prepareFontsIndex = async (url, options = {}) => {
+        const _requestFontsIndex = async (url, options = {}) => {
             const request = await _fetch(url, options);
             const content = request.content;
             
@@ -73,7 +73,7 @@ export const FontStorage = (
         };
         
         /**
-         * _prepareFont Used to request a font.
+         * _requestFont Used to request a font.
          * Established the following JSON structure for a font.
          * {
          *     "meta": {
@@ -95,7 +95,7 @@ export const FontStorage = (
          * @return {Promise}
         */
         
-        const _prepareFont = async (url, options = {}) => {
+        const _requestFont = async (url, options = {}) => {
             const request = await _fetch(url, options);
             const alpha = request.content.alpha;
             const meta = request.content.meta;
@@ -114,8 +114,8 @@ export const FontStorage = (
         
         // Return the public context.
         return {
-            prepareFontsIndex: (url, options) => _prepareFontsIndex(url, options),
-            prepareFont: (url, options) => _prepareFont(url, options)     
+            requestFontsIndex: (url, options) => _requestFontsIndex(url, options),
+            requestFont: (url, options) => _requestFont(url, options)     
         };
     }
 

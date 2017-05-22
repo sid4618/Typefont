@@ -3,14 +3,14 @@
  * @author Vasile Pește <sirvasile@protonmail.ch>
 */
 
-import {ImageDrawing} from "../image/imagedrawing.js";
+import { ImageDrawing } from "../image/drawing.js";
 
 export const ShapePerception = (
 
     function (undefined)
     {
         /**
-         * _prepareImages Load and binarize two images as ImageDrawing instances.
+         * _prepareImages Used to load and binarize two images as ImageDrawing instances.
          * @param {String} first The URL of the first image.
          * @param {String} second The URL of the second image.
          * @param {Object} [options = {}]
@@ -28,14 +28,14 @@ export const ShapePerception = (
                 const img1 = new ImageDrawing();
                 const size = perceptualComparisonSize;
                 
-                Promise.all([img.draw(first, 1, size, size), img1.draw(second, 1, size, size)])
+                Promise.all([img.draw(first, size, size), img1.draw(second, size, size)])
                     .then(() => resolve([img, img1]))
                     .catch(reject);
             });
         };
         
         /**
-         * _getBinarizedMatrix Put the pixels of a binarized ImageDrawing instance in a matrix.
+         * _getBinarizedMatrix Used to get a matrix with the pixels of a binarized ImageDrawing instance.
          * @param {ImageDrawing} img
          * @return {Array}
         */
@@ -65,7 +65,7 @@ export const ShapePerception = (
         };
         
         /**
-         * _compare Compare two images using a method based on human perception (Hamming distance).
+         * _compare Used to compare two images using a method based on human perception (Hamming distance).
          * @param {String} first The URL of the first image.
          * @param {String} second The URL of the second image.
          * @param {Object} [options = {}]

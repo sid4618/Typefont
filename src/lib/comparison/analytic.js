@@ -3,14 +3,14 @@
  * @author Vasile Pește <sirvasile@protonmail.ch>
 */
 
-import {ImageDrawing} from "../image/imagedrawing.js";
+import { ImageDrawing } from "../image/drawing.js";
 
 export const AnalyticPerception = (
 
     function (undefined)
     {
         /**
-         * _compare Compare two images using a pixel based method.
+         * _compare Used to compare two images using a pixel based method.
          * @param {String} first The URL of the first image.
          * @param {String} second The URL of the second image.
          * @param {Object} [options = {}]
@@ -19,9 +19,9 @@ export const AnalyticPerception = (
         
         const _compare = (first, second, options = {}) => {
             const {
-                // Comparison threshold.
+                // Used as comparison threshold.
                 analyticComparisonThreshold = 0.5,
-                // Scale the first and the second image to the same size before comparison?
+                // Used to scale the first and the second image to the same size before comparison.
                 analyticComparisonScaleToSameSize = false,
                 // Used as dimension when resizing the images to the same size.
                 analyticComparisonSize = 128

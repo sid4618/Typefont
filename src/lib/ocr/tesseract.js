@@ -1,29 +1,27 @@
 /**
- * @module OpticalRecognition Used to recognize the text in a image.
+ * @module TesseractOCR Used as OCR engine.
  * @author Vasile Pește <sirvasile@protonmail.ch>
 */
 
-export const OpticalRecognition = (
+export const TesseractOCR = (
 
     function (undefined)
     {
         /**
-         * _recognize Recognize the text in a image.
+         * _detect Used to recognize the text in a image.
          * @param {String} url The URL of the image to recognize.
          * @return {Promise}
         */
         
-        const _recognize = (url) => {
-            const options = {
+        const _detect = (url) => {
+            return Tesseract.recognize(url, {
                 lang: "eng",
                 tessedit_char_whitelist: "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789"
-            };
-            
-            return Tesseract.recognize(url, options);
+            });
         };
         
         // Return the public context.
-        return (url) => _recognize(url);
+        return (url) => _detect(url);
     }
 
 ());

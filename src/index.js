@@ -1,14 +1,14 @@
 /**
- * @module Typefont Used to recognize the font of a text in a image.
+ * @module Typefont Used to detect the font of a text in a image.
  * @author Vasile Pește <sirvasile@protonmail.ch>
  * @version 0.1-beta.0
 */
 
-import {FontStorage} from "./font/fontstorage.js";
-import {ImageDrawing} from "./image/imagedrawing.js";
-import {OpticalRecognition} from "./recognition/opticalrecognition.js";
-import {AnalyticPerception} from "./comparison/analytic.js";
-import {ShapePerception} from "./comparison/shape.js";
+import { FontStorage } from "./lib/font/storage.js";
+import { ImageDrawing } from "./lib/image/drawing.js";
+import { TesseractOCR } from "./lib/ocr/tesseract.js";
+import { AnalyticPerception } from "./lib/comparison/analytic.js";
+import { ShapePerception } from "./lib/comparison/shape.js";
 
 export const Typefont = (
 
@@ -104,7 +104,7 @@ export const Typefont = (
                     
                     const timeout = setTimeout(() => reject(`Unable to recognize ${url}`), textRecognitionTimeout * 1000);
                     
-                    OpticalRecognition(image.toDataURL()).then((res) => {
+                    TesseractOCR(image.toDataURL()).then((res) => {
                         clearTimeout(timeout);
                         res.symbolsBase64 = _symbolsToBase64(image, res, options);
                         res.pivot = image;
@@ -130,7 +130,7 @@ export const Typefont = (
             return new Promise((resolve, reject) => {
                 Promise.all([
                     _prepareImageRecognition(url, options),
-                    FontStorage.prepareFontsIndex(fontsIndex)
+                    FontStorage.requestFontsIndex(fontsIndex)
                 ]).then((res) => {
                     resolve({
                         recognition: res[0],
@@ -238,7 +238,7 @@ export const Typefont = (
                     
                     for (const name of fonts)
                     {
-                        FontStorage.prepareFont(`${fontsDirectory}${name}/${fontsData}`).then((font) => {
+                        FontStorage.requestFont(`${fontsDirectory}${name}/${fontsData}`).then((font) => {
                             _symbolsToDomain(symbols, font.alpha);
                             _compare(symbols, font.alpha, options).then((fin) => finalize(name, fin, font)).catch(reject);
                         }).catch(reject);
