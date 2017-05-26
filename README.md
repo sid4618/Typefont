@@ -1,7 +1,6 @@
 # Typefont
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/sirvasile)
 
-Typefont allows you to recognize the font of a text in a photo using a set of algorithms and libraries with the goal to obtain accurate results with the image as only input avoiding other manual processes. This is the only open source project of its kind.
+Typefont allows you to recognize the font of a text in a photo using a set of algorithms and libraries. This is the only open source project of its kind.
 
 ## Usage
 Import the main function and invoke it like in the following script.
