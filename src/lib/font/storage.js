@@ -1,10 +1,9 @@
 /**
- * @module FontStorage Used to fetch fonts from the database.
+ * @module FontStorage Used to fetch fonts.
  * @author Vasile Pește <sirvasile@protonmail.ch>
 */
 
 export const FontStorage = (
-
     function (undefined)
     {
         /**
@@ -118,5 +117,4 @@ export const FontStorage = (
             requestFont: (url, options) => _requestFont(url, options)     
         };
     }
-
 ());
