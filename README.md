@@ -50,6 +50,11 @@ Typefont("path/image.png", {
 }).then((res) => console.table(res));
 ```
 
+## Todo
++ [ ] Store and load fonts directly from `.ttf` files.
++ [ ] Implement the Shape Context algorithm to improve comparison results.
++ [ ] Implement the Hausdorff distance algorithm to improve the comparison results.
+
 ## How it works?
 Short summary: the input image is passed to the optical character recognition after some filters based on its brightness. The symbols (letters) are extracted from the input image and compared with the symbols of the fonts in the database using a perceptual comparison and a pixel based comparison in order to obtain a percentage of similarity.
 
@@ -74,7 +79,6 @@ The fonts stored in this database are just a JSON structure with letters as keys
 }
 ```
 Then you have to include your font in the index of fonts by adding the font name to the array.
-I'm working on a system that automatically generates the JSON structure starting from a `.ttf` font file.
 
 ## Author
 [Vasile Pește](https://twitter.com/Sirvasile_).
