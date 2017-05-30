@@ -1,33 +1,40 @@
 # Typefont
-
-Typefont allows you to recognize the font of a text in a photo using a set of algorithms and libraries. This is the only open source project of its kind.
+Typefont is a library that detects the font of a text in a image.
 
 ## Usage
 Import the main function and invoke it like in the following script.
-```javascript
-import {Typefont} from "./src/index.js";
 
-Typefont("path/image.png").then((res) => console.table(res));
+```javascript
+import { Typefont } from "./src/index.js";
+
+Typefont("image.png").then(res => console.log(res));
 ```
-The first argument can be the `path` or the `base64` of the image. The function returns a Promise which when is resolved returns an array (containing each font compared) which is ordered in descending order (considering the similarity percentage).
+or
+```javascript
+import { Typefont } from "./src/index.js";
+
+async function getFontFromImage (src) {
+    const fonts = await Typefont(src);
+    
+    return fonts[0]; // Return the most similar font.
+}
+```
+
+The first argument of the main function can be the `path` or the `base64` of the image. The function returns a Promise that when is resolved returns an array (containing each font compared) that is ordered in descending order (considering the similarity percentage).
 
 ## Preview
-Text on the cover of a book (texts are in italian because I live in Italy).
+Text on the cover of a book (the language is different because I live in Italy).
 ![](http://i.imgur.com/1JnyIC3.jpg)
 
 Text on the cover of another book.
 ![](http://i.imgur.com/smfr0Kn.jpg)
 
-## Why
-I had just discovered the version of [Tesseract](http://tesseract.projectnaptha.com/) written in JavaScript and I noticed that he was also trying to identify the font, I wondered how to improve this process then I used Tesseract to
-extract the letters from the input image, created a new system that uses the [Jimp](https://github.com/oliver-moran/jimp) image processing library to compare the extracted letters with the fonts stored in a dedicated library and wrote a dedicated algorithm for comparison in order to obtain more accurate results.
-
 ## Options
-You can pass an object with options as second argument.
+You can pass an object with options to the main function as second argument.
 
 Option | Type | Description | Default
 --- | --- | --- | ---
-`progress` | `Function` | A function which is called every time the comparison with a font is completed. | `undefined`
+`progress` | `Function` | A function that is called every time the comparison with a font is completed. | `undefined`
 `minSymbolConfidence` | `Number` | The minimum confidence that a symbol must have to be accepted in the comparison queue (the confidence value is assigned by the OCR engine). | `15`
 `analyticComparisonThreshold` | `Number` | The threshold of the analytic comparison. | `0.5`
 `analyticComparisonScaleToSameSize` | `Boolean` | Scale the symbols to the same size before the analytic comparison? | `false`
@@ -43,11 +50,11 @@ Option | Type | Description | Default
 ### Example
 Example with options.
 ```javascript
-Typefont("path/image.png", {
+Typefont("restaurant-logo.jpg", {
     minSymbolConfidence: 50,
     analyticComparisonScaleToSameSize: true,
     analyticComparisonSize: 256
-}).then((res) => console.table(res));
+}).then(res => console.log(res));
 ```
 
 ## Todo
