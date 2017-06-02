@@ -32,6 +32,23 @@ export const HausdorffDistance = (
             return max;
         };
         
+        const _center = (shape) => {
+            let x = 0;
+            let y = 0;
+            let size = 0;
+            
+            for (let i = 0; i < shape.height; ++i)
+                for (let j = 0; j < shape.width; ++j)
+                    if (shape.data[(j + i * shape.width) * 4 + 3])
+                    {
+                        x += j;
+                        y += i;
+                        ++size;
+                    }
+            
+            return { x: x / size, y: y / size };
+        };
+        
         const _distance = (shape, shape1, center, center1) => {
             const points = [];
             const points1 = [];
@@ -59,6 +76,6 @@ export const HausdorffDistance = (
             return 1 - Math.pow(max * Math.sqrt(2) / 300, 1 / 1.4);
         };
         
-        return (shape, shape1, center, center1) => _distance(shape, shape1, center, center1);
+        return (shape, shape1) => _distance(shape, shape1, _center(shape), _center(shape1));
     }
 ());
