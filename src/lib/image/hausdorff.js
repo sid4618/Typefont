@@ -49,7 +49,7 @@ export const HausdorffDistance = (
             return { x: x / size, y: y / size };
         };
         
-        const _distance = (shape, shape1, center, center1) => {
+        const _distance = (shape, shape1) => {
             const points = [];
             const points1 = [];
             const width = shape.width;
@@ -64,6 +64,8 @@ export const HausdorffDistance = (
                         points1.push({ x, y, });
                 }
             
+            const center = _center(shape);
+            const center1 = _center(shape1);
             const vector = { x: center.x - center1.x, y: center.y - center1.y };
             const h1 = _hausdorff(points, points1, vector);
             
@@ -76,6 +78,6 @@ export const HausdorffDistance = (
             return 1 - Math.pow(max * Math.sqrt(2) / 300, 1 / 1.4);
         };
         
-        return (shape, shape1) => _distance(shape, shape1, _center(shape), _center(shape1));
+        return (shape, shape1) => _distance(shape, shape1);
     }
 ());
