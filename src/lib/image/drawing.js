@@ -37,7 +37,7 @@ export class ImageDrawing
                 
                 resolve();
             };
-            image.onerror = image.onabort = () => reject(`Unable to load ${url}`);
+            image.onerror = image.onabort = reject;
             image.src = url;
         });
     }

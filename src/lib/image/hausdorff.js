@@ -1,6 +1,7 @@
 /**
  * @module Hausdorff
  * @author Vasile Pește <sirvasile@protonmail.ch>
+ * Felix Hausdorff is the mind behind the algorithms.
 */
 
 export const HausdorffDistance = (
@@ -49,6 +50,13 @@ export const HausdorffDistance = (
             return { x: x / size, y: y / size };
         };
         
+        /**
+         * _distance Used to compute the Hausdorff distance between two shapes.
+         * @param {ImageData} shape
+         * @param {ImageData} shape1
+         * @return {Number}
+        */
+        
         const _distance = (shape, shape1) => {
             const points = [];
             const points1 = [];
@@ -75,7 +83,7 @@ export const HausdorffDistance = (
             const h2 = _hausdorff(points, points1, vector);
             const max = Math.max(h1, h2);
             
-            return 1 - Math.pow(max * Math.sqrt(2) / 300, 1 / 1.4);
+            return Math.pow(max * Math.sqrt(2) / 300, 1 / 1.4);
         };
         
         return (shape, shape1) => _distance(shape, shape1);
