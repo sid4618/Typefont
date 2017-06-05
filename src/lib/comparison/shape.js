@@ -3,10 +3,9 @@
  * @author Vasile Pește <sirvasile@protonmail.ch>
 */
 
-import { ImageDrawing } from "../image/drawing.js";
+import ImageDrawing from "../image/drawing.js";
 
 export const ShapePerception = (
-
     function (undefined)
     {
         /**
@@ -95,5 +94,4 @@ export const ShapePerception = (
         // Return the public context.
         return (first, second, options) => _compare(first, second, options);
     }
-
 ());

@@ -34,13 +34,14 @@ export const HausdorffDistance = (
         };
         
         const _center = (shape) => {
+            const width = shape.width;
             let x = 0;
             let y = 0;
             let size = 0;
             
             for (let i = 0; i < shape.height; ++i)
-                for (let j = 0; j < shape.width; ++j)
-                    if (shape.data[(j + i * shape.width) * 4 + 3])
+                for (let j = 0; j < width; ++j)
+                    if (shape.data[(j + i * width) * 4 + 3])
                     {
                         x += j;
                         y += i;

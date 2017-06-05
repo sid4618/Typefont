@@ -4,7 +4,6 @@
 */
 
 export const TesseractOCR = (
-
     function (undefined)
     {
         /**
@@ -23,5 +22,4 @@ export const TesseractOCR = (
         // Return the public context.
         return (url) => _detect(url);
     }
-
 ());

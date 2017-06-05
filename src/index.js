@@ -4,8 +4,9 @@
  * @version 0.1-beta.0
 */
 
+import ImageDrawing from "./lib/image/drawing.js";
+
 import { FontStorage } from "./lib/font/storage.js";
-import { ImageDrawing } from "./lib/image/drawing.js";
 import { TesseractOCR } from "./lib/ocr/tesseract.js";
 import { AnalyticPerception } from "./lib/comparison/analytic.js";
 import { ShapePerception } from "./lib/comparison/shape.js";

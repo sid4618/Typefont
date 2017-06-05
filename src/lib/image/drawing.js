@@ -3,8 +3,7 @@
  * @author Vasile Pește <sirvasile@protonmail.ch>
 */
 
-export class ImageDrawing 
-{
+export default class ImageDrawing {
     constructor () {
         this.canvas = document.createElement("canvas");
         this.context = this.canvas.getContext("2d");

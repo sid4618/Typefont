@@ -3,10 +3,9 @@
  * @author Vasile Pește <sirvasile@protonmail.ch>
 */
 
-import { ImageDrawing } from "../image/drawing.js";
+import ImageDrawing from "../image/drawing.js";
 
 export const AnalyticPerception = (
-
     function (undefined)
     {
         /**
@@ -52,5 +51,4 @@ export const AnalyticPerception = (
         // Return the public context.
         return (first, second, options) => _compare(first, second, options);
     }
-
 ());

@@ -3,10 +3,9 @@
  * @author Vasile Pește <sirvasile@protonmail.ch>
 */
 
-import { ImageDrawing } from "../image/drawing.js";
+import ImageDrawing from "../image/drawing.js";
 
 export const FontStringify = (
-
     function (undefined)
     {
         /**
@@ -93,5 +92,4 @@ export const FontStringify = (
         
         return (name, src, options) => _requestFont(name, src, options);
     }
-
 ());

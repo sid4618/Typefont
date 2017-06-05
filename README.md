@@ -61,6 +61,7 @@ Typefont("restaurant-logo.jpg", {
 + [ ] Store and load fonts directly from `.ttf` files.
 + [ ] Implement the Shape Context algorithm to improve comparison results.
 + [ ] Implement the Hausdorff distance algorithm to improve the comparison results.
++ [ ] Import the Google Fonts database.
 
 ## How it works?
 Short summary: the input image is passed to the optical character recognition after some filters based on its brightness. The symbols (letters) are extracted from the input image and compared with the symbols of the fonts in the database using a perceptual comparison and a pixel based comparison in order to obtain a percentage of similarity.
