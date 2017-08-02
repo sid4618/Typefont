@@ -20,7 +20,7 @@ async function getFontFromImage (src) {
 }
 ```
 
-The first argument of the main function can be the `path` or the `base64` of the image. The function returns a Promise that when is resolved returns an array (containing each font compared) that is ordered in descending order (considering the similarity percentage).
+The first argument of the function can be the `path` or the `base64` of the image. The function returns a Promise that when is resolved returns an array containing each font ordered in descending order (considering the similarity percentage).
 
 ## Preview
 Text on the cover of a book (the language is different because I live in Italy).
@@ -29,8 +29,14 @@ Text on the cover of a book (the language is different because I live in Italy).
 Text on the cover of another book.
 ![](http://i.imgur.com/smfr0Kn.jpg)
 
+## V2
+I'm working on a new version which gets the fonts directly from .ttf files or from the Google Fonts database. The comparison is made 
+using the [Hausdorff Distance](https://en.wikipedia.org/wiki/Hausdorff_distance) and the
+[Shape Context](https://en.wikipedia.org/wiki/Shape_context). If you are interested in a collaboration contact
+me (sirvasile@protonmail.ch).
+
 ## Options
-You can pass an object with options to the main function as second argument.
+You can pass an object with options to the function as second argument.
 
 Option | Type | Description | Default
 --- | --- | --- | ---
