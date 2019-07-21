@@ -1,5 +1,5 @@
 # Typefont
-Typefont is a library that detects the font of a text in a image.
+Typefont is an experimental library that detects the font of a text in a image.
 
 ## Usage
 Import the main function and invoke it like in the following script.
@@ -7,14 +7,14 @@ Import the main function and invoke it like in the following script.
 ```javascript
 import { Typefont } from "./src/index.js";
 
-Typefont("image.png").then(res => console.log(res));
+Typefont("image.png").then((result) => console.log(result));
 ```
 or
 ```javascript
 import { Typefont } from "./src/index.js";
 
-async function getFontFromImage (src) {
-    const fonts = await Typefont(src);
+async function getFontFromImage (source) {
+    const fonts = await Typefont(source);
     
     return fonts[0]; // Return the most similar font.
 }
@@ -29,11 +29,11 @@ Text on the cover of a book (the language is different because I live in Italy).
 Text on the cover of another book.
 ![](http://i.imgur.com/smfr0Kn.jpg)
 
-## V2
-I'm working on a new version which gets the fonts directly from .ttf files or from the Google Fonts database. The comparison is made 
+## Version 2
+I'm working on a new version which gets the fonts directly from .ttf files and the Google Fonts database. The comparison is made 
 using the [Hausdorff Distance](https://en.wikipedia.org/wiki/Hausdorff_distance) and the
 [Shape Context](https://en.wikipedia.org/wiki/Shape_context). If you are interested in a collaboration contact
-me (sirvasile@protonmail.ch).
+me (vasile.peste@protonmail.ch). It's difficult to progress since I work and I have many other projects.
 
 ## Options
 You can pass an object with options to the function as second argument.
@@ -94,8 +94,8 @@ The fonts stored in this database are just a JSON structure with letters as keys
 ```
 Then you have to include your font in the index of fonts by adding the font name to the array.
 
-## Author
-[Vasile Pește](https://twitter.com/Sirvasile_).
-
 ## License
 [MIT License](LICENSE).
+
+## Credits
+Author: Vasile Pește (vasile.peste@protonmail.ch).
