@@ -2,7 +2,7 @@
 Typefont is an experimental library that detects the font of a text in a image.
 
 ## Usage
-Import the main function and invoke it like in the following script.
+Import the main function and invoke it like in the following script:
 
 ```javascript
 import { Typefont } from "./src/index.js";
@@ -20,7 +20,7 @@ async function getFontFromImage (source) {
 }
 ```
 
-The first argument of the function can be the `path` or the `base64` of the image. The function returns a Promise that when is resolved returns an array containing each font ordered in descending order (considering the similarity percentage).
+The first argument of the function can be the `path` or the `base64` of the image. The function returns a promise that when is resolved returns an array containing each font ordered in descending order (considering the similarity percentage).
 
 ## Preview
 Text on the cover of a book (the language is different because I live in Italy).
@@ -30,7 +30,7 @@ Text on the cover of another book.
 ![](http://i.imgur.com/smfr0Kn.jpg)
 
 ## Version 2
-I'm working on a new version which gets the fonts directly from .ttf files and the Google Fonts database. The comparison is made 
+I'm working on a new version which gets the fonts directly from `.ttf` files and the Google Fonts database. The comparison is made 
 using the [Hausdorff Distance](https://en.wikipedia.org/wiki/Hausdorff_distance) and the
 [Shape Context](https://en.wikipedia.org/wiki/Shape_context). If you are interested in a collaboration contact
 me (vasile.peste@protonmail.ch). It's difficult to progress since I work and I have many other projects.
@@ -73,7 +73,7 @@ Typefont("restaurant-logo.jpg", {
 Short summary: the input image is passed to the optical character recognition after some filters based on its brightness. The symbols (letters) are extracted from the input image and compared with the symbols of the fonts in the database using a perceptual comparison and a pixel based comparison in order to obtain a percentage of similarity.
 
 ## How to add a font
-The fonts stored in this database are just a JSON structure with letters as keys and the base64 of the image of the letter of the font as value. If you want to add a new font you must follow this structure.
+The fonts stored in this database are just a 'JSON' structure with letters as keys and the base64 of the image of the letter of the font as value. If you want to add a new font you must follow this structure.
 ```javascript
 {
     "meta": {
@@ -92,7 +92,7 @@ The fonts stored in this database are just a JSON structure with letters as keys
     }
 }
 ```
-Then you have to include your font in the index of fonts by adding the font name to the array.
+Then you have to include your font in the index of fonts by adding the font name to the Array.
 
 ## License
 [MIT License](LICENSE).
